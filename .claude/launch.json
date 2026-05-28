@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "献立アプリ",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-p", "8765", "/Users/ishida/Desktop/claude code"],
+      "port": 8765
+    },
+    {
+      "name": "knowledge-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/ishida/projects/knowledge-app", "run", "dev"],
+      "port": 3000
+    }
+  ]
+}
