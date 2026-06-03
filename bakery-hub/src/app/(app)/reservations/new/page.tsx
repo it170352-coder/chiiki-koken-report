@@ -5,14 +5,35 @@ import { createReservation } from "../actions";
 
 export default async function NewReservationPage() {
   const supabase = await createClient();
-  const [{ data: customers }, { data: products }] = await Promise.all([
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const [{ data: customers }, { data: products }, { data: profile }] = await Promise.all([
     supabase.from("customers").select("id, name").order("name"),
     supabase
       .from("products")
       .select("id, name, price")
       .eq("is_active", true)
       .order("name"),
+    supabase
+      .from("profiles")
+      .select("pickup_start, pickup_end, closed_days")
+      .eq("id", user!.id)
+      .single(),
   ]);
+
+  const WEEKDAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
+  const pickupStart = (profile?.pickup_start ?? "").slice(0, 5);
+  const pickupEnd = (profile?.pickup_end ?? "").slice(0, 5);
+  const closedLabels = (profile?.closed_days ?? "")
+    .split(",")
+    .map((s: string) => s.trim())
+    .filter(Boolean)
+    .map((n: string) => WEEKDAY_LABELS[Number(n)])
+    .filter(Boolean);
+  const pickupHint =
+    pickupStart && pickupEnd ? `受取時間の目安：${pickupStart}〜${pickupEnd}` : "";
+  const closedHint = closedLabels.length ? `定休日：${closedLabels.join("・")}曜` : "";
 
   const customerList = (customers ?? []) as Pick<Customer, "id" | "name">[];
   const productList = (products ?? []) as Pick<
@@ -62,6 +83,11 @@ export default async function NewReservationPage() {
             required
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
           />
+          {(pickupHint || closedHint) && (
+            <p className="mt-1 text-xs text-gray-400">
+              {[pickupHint, closedHint].filter(Boolean).join("　／　")}
+            </p>
+          )}
         </div>
 
         <div>
