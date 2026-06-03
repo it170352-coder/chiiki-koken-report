@@ -12,6 +12,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "/Users/ishida/projects/knowledge-app", "run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "bakery-hub",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/ishida/Desktop/claude code/bakery-hub", "run", "dev", "--", "-p", "3001"],
+      "port": 3001
     }
   ]
 }
