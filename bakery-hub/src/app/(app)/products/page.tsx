@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
+import { PRODUCT_CATEGORIES } from "@/lib/types";
 import { createProduct } from "./actions";
 import ProductRow from "./ProductRow";
 
@@ -26,11 +27,18 @@ export default async function ProductsPage() {
           placeholder="商品名（例：クロワッサン）"
           className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
         />
-        <input
+        <select
           name="category"
-          placeholder="カテゴリ"
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
-        />
+          defaultValue=""
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-amber-500 focus:outline-none"
+        >
+          <option value="">カテゴリを選択</option>
+          {PRODUCT_CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
         <input
           name="price"
           type="number"

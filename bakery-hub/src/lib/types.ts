@@ -18,6 +18,15 @@ export type Product = {
   created_at: string;
 };
 
+export const PRODUCT_CATEGORIES = [
+  "食事パン",
+  "菓子パン",
+  "惣菜パン",
+  "デニッシュ・ペストリー",
+  "サンドイッチ",
+  "焼き菓子・その他",
+] as const;
+
 export type ReservationStatus = "pending" | "ready" | "completed" | "cancelled";
 
 export type Reservation = {

@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/products", label: "商品" },
   { href: "/inventory", label: "在庫" },
   { href: "/analytics", label: "分析" },
+  { href: "/settings", label: "設定" },
 ];
 
 export default function NavBar({ storeName }: { storeName: string }) {

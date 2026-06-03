@@ -11,6 +11,11 @@ create table if not exists profiles (
   created_at timestamptz not null default now()
 );
 
+-- 店舗設定（営業・受取時間／定休日）。既存DBにも後から追加できるよう if not exists
+alter table profiles add column if not exists pickup_start time;
+alter table profiles add column if not exists pickup_end time;
+alter table profiles add column if not exists closed_days text not null default '';
+
 -- 新規ユーザー登録時に profiles を自動作成
 create or replace function handle_new_user()
 returns trigger
