@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Calendar from "./Calendar";
 
 type PublicProduct = { id: string; name: string; price: number };
 
@@ -21,7 +22,8 @@ export default function BookingForm({
   closedDates: string[];
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [pickupAt, setPickupAt] = useState("");
+  const [pickupDate, setPickupDate] = useState("");
+  const [pickupTime, setPickupTime] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [memo, setMemo] = useState("");
@@ -36,19 +38,6 @@ export default function BookingForm({
     setQuantities((prev) => ({ ...prev, [id]: Math.max(0, v) }));
   }
 
-  // 受取日時が定休日・臨時休業日かどうか（入力中の事前案内用）
-  function closedReason(value: string): string {
-    if (!value) return "";
-    const d = new Date(value);
-    const dow = String(d.getDay());
-    if (closedDays.includes(dow)) return "選んだ曜日は定休日です。";
-    const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    if (closedDates.includes(ymd)) return "選んだ日は休業日です。";
-    return "";
-  }
-
-  const dateWarning = closedReason(pickupAt);
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -61,12 +50,12 @@ export default function BookingForm({
       setError("商品を1つ以上選んでください。");
       return;
     }
-    if (!pickupAt) {
-      setError("受取日時を選んでください。");
+    if (!pickupDate) {
+      setError("受取日をカレンダーから選んでください。");
       return;
     }
-    if (dateWarning) {
-      setError(dateWarning);
+    if (!pickupTime) {
+      setError("受取時間を選んでください。");
       return;
     }
     if (!name.trim() || !phone.trim()) {
@@ -74,13 +63,15 @@ export default function BookingForm({
       return;
     }
 
+    const pickupIso = new Date(`${pickupDate}T${pickupTime}`).toISOString();
+
     setSubmitting(true);
     const supabase = createClient();
     const { error: rpcError } = await supabase.rpc("create_public_reservation", {
       p_store: storeId,
       p_name: name.trim(),
       p_phone: phone.trim(),
-      p_pickup: new Date(pickupAt).toISOString(),
+      p_pickup: pickupIso,
       p_memo: memo.trim(),
       p_items: items,
     });
@@ -168,20 +159,34 @@ export default function BookingForm({
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          受取日時 <span className="text-red-500">*</span>
+          受取日 <span className="text-red-500">*</span>
+        </label>
+        <Calendar
+          closedDays={closedDays}
+          closedDates={closedDates}
+          value={pickupDate}
+          onChange={setPickupDate}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-gray-700">
+          受取時間 <span className="text-red-500">*</span>
         </label>
         <input
-          type="datetime-local"
-          value={pickupAt}
-          onChange={(e) => setPickupAt(e.target.value)}
+          type="time"
+          value={pickupTime}
+          min={pickupStart || undefined}
+          max={pickupEnd || undefined}
+          onChange={(e) => setPickupTime(e.target.value)}
           required
           className={inputCls}
         />
-        {(pickupStart && pickupEnd) || dateWarning ? (
-          <p className={`mt-1 text-xs ${dateWarning ? "text-red-500" : "text-gray-400"}`}>
-            {dateWarning || `受取時間の目安：${pickupStart}〜${pickupEnd}`}
+        {pickupStart && pickupEnd && (
+          <p className="mt-1 text-xs text-gray-400">
+            受取時間の目安：{pickupStart}〜{pickupEnd}
           </p>
-        ) : null}
+        )}
       </div>
 
       <div>
