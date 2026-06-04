@@ -126,25 +126,25 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Link
             href="/inventory"
-            className="rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-amber-700"
+            className="flex min-h-[64px] items-center justify-center rounded-2xl bg-amber-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-amber-700"
           >
             在庫を記録
           </Link>
           <Link
             href="/reservations/new"
-            className="rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-amber-700"
+            className="flex min-h-[64px] items-center justify-center rounded-2xl bg-amber-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-amber-700"
           >
             新規予約
           </Link>
           <Link
             href="/customers"
-            className="rounded-2xl border border-amber-300 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700 hover:bg-amber-50"
+            className="flex min-h-[64px] items-center justify-center rounded-2xl border border-amber-300 bg-white px-4 py-5 text-center text-base font-semibold text-amber-700 hover:bg-amber-50"
           >
             顧客を見る
           </Link>
           <Link
             href="/products"
-            className="rounded-2xl border border-amber-300 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700 hover:bg-amber-50"
+            className="flex min-h-[64px] items-center justify-center rounded-2xl border border-amber-300 bg-white px-4 py-5 text-center text-base font-semibold text-amber-700 hover:bg-amber-50"
           >
             商品を管理
           </Link>
