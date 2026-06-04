@@ -1,7 +1,9 @@
-import { getCurrentStore, canManageStore } from "@/lib/store";
+import { getCurrentStore, canManageStore, canManageMembers } from "@/lib/store";
 import StoreSettingsForm from "./StoreSettingsForm";
 import PasswordForm from "./PasswordForm";
 import ShopLink from "./ShopLink";
+import StaffManager from "./StaffManager";
+import { getStaffList } from "./staffActions";
 import { STORE_ROLE_LABELS } from "@/lib/types";
 
 export default async function SettingsPage() {
@@ -27,6 +29,10 @@ export default async function SettingsPage() {
     .filter(Boolean);
 
   const canEdit = canManageStore(role);
+  const canStaff = canManageMembers(role);
+  const staff = canStaff
+    ? await getStaffList()
+    : { available: true, members: [] };
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -58,6 +64,19 @@ export default async function SettingsPage() {
             このURLをお客様に共有すると、ログインなしで予約できます（SNSや店頭QRなどに）。
           </p>
           <ShopLink storeId={storeId} />
+        </section>
+      )}
+
+      {canStaff && (
+        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+          <h2 className="mb-1 font-semibold text-gray-700">スタッフ管理</h2>
+          <p className="mb-4 text-xs text-gray-400">
+            お店で働くスタッフのログインアカウントを追加・削除できます（オーナーのみ）。
+          </p>
+          <StaffManager
+            initialMembers={staff.members}
+            available={staff.available}
+          />
         </section>
       )}
 
