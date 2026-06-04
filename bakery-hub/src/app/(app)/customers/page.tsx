@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Customer } from "@/lib/types";
-import { createCustomer } from "./actions";
+import SwipeToDelete from "@/components/SwipeToDelete";
+import { createCustomer, deleteCustomer } from "./actions";
 
 export default async function CustomersPage(props: PageProps<"/customers">) {
   const searchParams = await props.searchParams;
@@ -85,16 +86,18 @@ export default async function CustomersPage(props: PageProps<"/customers">) {
           <ul className="divide-y divide-amber-50">
             {list.map((c) => (
               <li key={c.id}>
-                <Link
-                  href={`/customers/${c.id}`}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-amber-50/50"
-                >
-                  <div>
-                    <p className="font-medium text-gray-800">{c.name}</p>
-                    <p className="text-xs text-gray-400">{c.phone || "電話番号未登録"}</p>
-                  </div>
-                  <span className="text-xs text-amber-600">詳細 ›</span>
-                </Link>
+                <SwipeToDelete onDelete={deleteCustomer.bind(null, c.id)}>
+                  <Link
+                    href={`/customers/${c.id}`}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-amber-50/50"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-800">{c.name}</p>
+                      <p className="text-xs text-gray-400">{c.phone || "電話番号未登録"}</p>
+                    </div>
+                    <span className="text-xs text-amber-600">詳細 ›</span>
+                  </Link>
+                </SwipeToDelete>
               </li>
             ))}
           </ul>

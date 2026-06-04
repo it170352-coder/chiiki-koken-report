@@ -63,3 +63,16 @@ export async function updateReservationStatus(
 
   revalidatePath("/reservations");
 }
+
+export async function deleteReservation(id: string) {
+  const { supabase, storeId } = await getCurrentStore();
+  if (!storeId) return;
+
+  await supabase
+    .from("reservations")
+    .delete()
+    .eq("id", id)
+    .eq("store_id", storeId);
+
+  revalidatePath("/reservations");
+}
