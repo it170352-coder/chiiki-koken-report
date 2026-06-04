@@ -25,13 +25,17 @@ export default function SwipeToDelete({
     setDragging(true);
     moved.current = false;
     startX.current = e.clientX;
-    e.currentTarget.setPointerCapture(e.pointerId);
   }
 
   function onPointerMove(e: React.PointerEvent) {
     if (!dragging) return;
     const delta = e.clientX - startX.current;
-    if (Math.abs(delta) > 6) moved.current = true;
+    // 一定以上動いた時だけ「スワイプ」と判定し、ポインタを掴む（タップ＝リンク遷移は妨げない）
+    if (!moved.current && Math.abs(delta) > 6) {
+      moved.current = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    if (!moved.current) return;
     const base = open ? -REVEAL : 0;
     const next = Math.min(0, Math.max(-REVEAL, base + delta));
     setDx(next);

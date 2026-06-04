@@ -90,9 +90,11 @@ export default function Calendar({
                 "flex h-9 items-center justify-center rounded-lg text-sm",
                 selected
                   ? "bg-amber-600 font-bold text-white"
-                  : disabled
-                    ? "text-gray-300 line-through"
-                    : "text-gray-700 hover:bg-amber-50",
+                  : closed
+                    ? "bg-red-50 font-medium text-red-500"
+                    : past
+                      ? "text-gray-300 line-through"
+                      : "text-gray-700 hover:bg-amber-50",
               ].join(" ")}
             >
               {d.getDate()}
@@ -102,7 +104,7 @@ export default function Calendar({
       </div>
 
       <p className="mt-2 text-xs text-gray-400">
-        取り消し線の日は休業日・過去日のため選べません。
+        <span className="text-red-500">赤色</span>は休業日、取り消し線は過去日のため選べません。
       </p>
     </div>
   );
