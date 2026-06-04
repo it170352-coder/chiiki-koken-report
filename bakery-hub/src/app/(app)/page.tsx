@@ -35,15 +35,13 @@ export default async function DashboardPage() {
   const { start, end } = todayRange();
   const today = todayDateStr();
 
-  // 本日の予約（キャンセル以外）
-  const { data: reservations } = await supabase
+  // 本日の予約数（キャンセル以外）
+  const { count: todayReservationCount } = await supabase
     .from("reservations")
-    .select("id, status, reservation_items(quantity, product_id)")
+    .select("id", { count: "exact", head: true })
     .gte("pickup_at", start)
     .lt("pickup_at", end)
     .neq("status", "cancelled");
-
-  const todayReservationCount = reservations?.length ?? 0;
 
   // 商品（価格参照用）
   const { data: products } = await supabase
@@ -68,14 +66,12 @@ export default async function DashboardPage() {
     if (p) todaySales += l.sold * p.price;
   });
 
-  // 人気商品ランキング（本日の予約明細の数量合計）
+  // 人気商品ランキング（本日の販売実績＝在庫記録の販売数の合計）
   const popularity = new Map<string, number>();
-  reservations?.forEach((r) => {
-    const items = (r.reservation_items ?? []) as { quantity: number; product_id: string | null }[];
-    items.forEach((it) => {
-      if (!it.product_id) return;
-      popularity.set(it.product_id, (popularity.get(it.product_id) ?? 0) + it.quantity);
-    });
+  logs?.forEach((l) => {
+    if (l.sold > 0) {
+      popularity.set(l.product_id, (popularity.get(l.product_id) ?? 0) + l.sold);
+    }
   });
   const ranking = [...popularity.entries()]
     .map(([id, qty]) => ({ name: priceMap.get(id)?.name ?? "（削除商品）", qty }))
@@ -156,7 +152,7 @@ export default async function DashboardPage() {
       )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="本日の予約数" value={todayReservationCount} unit="件" />
+        <Stat label="本日の予約数" value={todayReservationCount ?? 0} unit="件" />
         <Stat label="本日の売上" value={`¥${todaySales.toLocaleString()}`} />
         <Stat label="登録顧客数" value={customerCount ?? 0} unit="人" />
         <Stat label="本日の在庫記録" value={logs?.length ?? 0} unit="品" />
@@ -164,9 +160,9 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-amber-100 bg-white p-5">
-          <h2 className="mb-3 font-semibold text-gray-700">人気商品ランキング（本日の予約）</h2>
+          <h2 className="mb-3 font-semibold text-gray-700">人気商品ランキング（本日の販売実績）</h2>
           {ranking.length === 0 ? (
-            <p className="text-sm text-gray-400">本日の予約データがありません。</p>
+            <p className="text-sm text-gray-400">本日の販売データがありません。</p>
           ) : (
             <ol className="space-y-2">
               {ranking.map((r, i) => (

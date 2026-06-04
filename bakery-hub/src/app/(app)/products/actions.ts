@@ -1,24 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-
-async function getUserId() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return { supabase, userId: user?.id };
-}
+import { getCurrentStore } from "@/lib/store";
 
 export async function createProduct(formData: FormData) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, userId, storeId } = await getCurrentStore();
+  if (!userId || !storeId) return;
 
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return;
 
   await supabase.from("products").insert({
+    store_id: storeId,
     user_id: userId,
     name,
     category: String(formData.get("category") ?? "").trim(),
@@ -30,22 +23,22 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function toggleProduct(id: string, isActive: boolean) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, storeId } = await getCurrentStore();
+  if (!storeId) return;
 
   await supabase
     .from("products")
     .update({ is_active: isActive })
     .eq("id", id)
-    .eq("user_id", userId);
+    .eq("store_id", storeId);
 
   revalidatePath("/products");
 }
 
 export async function deleteProduct(id: string) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, storeId } = await getCurrentStore();
+  if (!storeId) return;
 
-  await supabase.from("products").delete().eq("id", id).eq("user_id", userId);
+  await supabase.from("products").delete().eq("id", id).eq("store_id", storeId);
   revalidatePath("/products");
 }

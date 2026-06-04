@@ -1,19 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-
-async function getUserId() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return { supabase, userId: user?.id };
-}
+import { getCurrentStore } from "@/lib/store";
 
 export async function saveInventoryLog(formData: FormData) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, userId, storeId } = await getCurrentStore();
+  if (!userId || !storeId) return;
 
   const productId = String(formData.get("product_id") ?? "");
   const date = String(formData.get("date") ?? "");
@@ -25,6 +17,7 @@ export async function saveInventoryLog(formData: FormData) {
 
   await supabase.from("inventory_logs").upsert(
     {
+      store_id: storeId,
       user_id: userId,
       product_id: productId,
       date,
@@ -32,7 +25,7 @@ export async function saveInventoryLog(formData: FormData) {
       sold,
       wasted,
     },
-    { onConflict: "user_id,product_id,date" },
+    { onConflict: "store_id,product_id,date" },
   );
 
   revalidatePath("/inventory");

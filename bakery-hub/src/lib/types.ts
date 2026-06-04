@@ -1,5 +1,30 @@
+export type StoreRole = "owner" | "manager" | "staff";
+
+export const STORE_ROLE_LABELS: Record<StoreRole, string> = {
+  owner: "オーナー",
+  manager: "店長",
+  staff: "スタッフ",
+};
+
+export type Store = {
+  id: string;
+  name: string;
+  pickup_start: string | null;
+  pickup_end: string | null;
+  closed_days: string;
+  created_at: string;
+};
+
+export type StoreMember = {
+  store_id: string;
+  user_id: string;
+  role: StoreRole;
+  created_at: string;
+};
+
 export type Customer = {
   id: string;
+  store_id: string;
   user_id: string;
   name: string;
   phone: string | null;
@@ -10,6 +35,7 @@ export type Customer = {
 
 export type Product = {
   id: string;
+  store_id: string;
   user_id: string;
   name: string;
   category: string;
@@ -31,6 +57,7 @@ export type ReservationStatus = "pending" | "ready" | "completed" | "cancelled";
 
 export type Reservation = {
   id: string;
+  store_id: string;
   user_id: string;
   customer_id: string | null;
   pickup_at: string;
@@ -48,6 +75,7 @@ export type ReservationItem = {
 
 export type InventoryLog = {
   id: string;
+  store_id: string;
   user_id: string;
   product_id: string;
   date: string;
