@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { ReservationStatus } from "@/lib/types";
+import SwipeToDelete from "@/components/SwipeToDelete";
 import StatusControl from "./StatusControl";
+import { deleteReservation } from "./actions";
 
 type ResRow = {
   id: string;
@@ -60,9 +62,10 @@ export default async function ReservationsPage() {
                 {items.map((r) => (
                   <div
                     key={r.id}
-                    className="rounded-2xl border border-amber-100 bg-white p-4"
+                    className="overflow-hidden rounded-2xl border border-amber-100"
                   >
-                    <div className="flex items-start justify-between gap-3">
+                    <SwipeToDelete onDelete={deleteReservation.bind(null, r.id)}>
+                    <div className="flex items-start justify-between gap-3 p-4">
                       <div className="min-w-0">
                         <p className="font-medium text-gray-800">
                           {r.customers?.name ?? "（顧客未指定）"}
@@ -88,6 +91,7 @@ export default async function ReservationsPage() {
                       </div>
                       <StatusControl id={r.id} status={r.status} />
                     </div>
+                    </SwipeToDelete>
                   </div>
                 ))}
               </div>
