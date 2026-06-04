@@ -12,6 +12,7 @@ export type Store = {
   pickup_start: string | null;
   pickup_end: string | null;
   closed_days: string;
+  closed_dates: string;
   created_at: string;
 };
 

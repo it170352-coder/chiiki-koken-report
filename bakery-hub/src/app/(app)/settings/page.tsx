@@ -11,11 +11,16 @@ export default async function SettingsPage() {
 
   const { data: store } = await supabase
     .from("stores")
-    .select("name, pickup_start, pickup_end, closed_days")
+    .select("name, pickup_start, pickup_end, closed_days, closed_dates")
     .eq("id", storeId ?? "")
     .maybeSingle();
 
   const closedDays = (store?.closed_days ?? "")
+    .split(",")
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+
+  const closedDates = (store?.closed_dates ?? "")
     .split(",")
     .map((s: string) => s.trim())
     .filter(Boolean);
@@ -30,10 +35,10 @@ export default async function SettingsPage() {
         <section className="rounded-2xl border border-amber-100 bg-white p-5">
           <h2 className="mb-4 font-semibold text-gray-700">店舗情報</h2>
           <StoreSettingsForm
-            storeName={store?.name ?? ""}
             pickupStart={(store?.pickup_start ?? "").slice(0, 5)}
             pickupEnd={(store?.pickup_end ?? "").slice(0, 5)}
             closedDays={closedDays}
+            closedDates={closedDates}
           />
         </section>
       ) : (

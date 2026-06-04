@@ -14,7 +14,7 @@ export default async function NewReservationPage() {
       .order("name"),
     supabase
       .from("stores")
-      .select("pickup_start, pickup_end, closed_days")
+      .select("pickup_start, pickup_end, closed_days, closed_dates")
       .eq("id", storeId ?? "")
       .maybeSingle(),
   ]);
@@ -28,9 +28,23 @@ export default async function NewReservationPage() {
     .filter(Boolean)
     .map((n: string) => WEEKDAY_LABELS[Number(n)])
     .filter(Boolean);
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const upcomingClosedDates = (store?.closed_dates ?? "")
+    .split(",")
+    .map((s: string) => s.trim())
+    .filter(Boolean)
+    .filter((d: string) => d >= todayStr)
+    .sort()
+    .map((d: string) => {
+      const [, m, day] = d.split("-");
+      return `${Number(m)}/${Number(day)}`;
+    });
   const pickupHint =
     pickupStart && pickupEnd ? `受取時間の目安：${pickupStart}〜${pickupEnd}` : "";
   const closedHint = closedLabels.length ? `定休日：${closedLabels.join("・")}曜` : "";
+  const closedDatesHint = upcomingClosedDates.length
+    ? `臨時休業：${upcomingClosedDates.join("・")}`
+    : "";
 
   const customerList = (customers ?? []) as Pick<Customer, "id" | "name">[];
   const productList = (products ?? []) as Pick<
@@ -80,9 +94,9 @@ export default async function NewReservationPage() {
             required
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
           />
-          {(pickupHint || closedHint) && (
+          {(pickupHint || closedHint || closedDatesHint) && (
             <p className="mt-1 text-xs text-gray-400">
-              {[pickupHint, closedHint].filter(Boolean).join("　／　")}
+              {[pickupHint, closedHint, closedDatesHint].filter(Boolean).join("　／　")}
             </p>
           )}
         </div>
