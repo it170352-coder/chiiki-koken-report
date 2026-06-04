@@ -2,19 +2,26 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
 
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+// 日本時間の「今日」0:00〜翌0:00 を UTC の ISO 文字列で返す。
+// サーバーが UTC で動くため、日本時間に合わせて範囲を計算する。
 function todayRange() {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  const jst = new Date(Date.now() + JST_OFFSET_MS);
+  const start = new Date(
+    Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate()) -
+      JST_OFFSET_MS,
+  );
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
   return { start: start.toISOString(), end: end.toISOString() };
 }
 
+// 日本時間での「今日」の日付（YYYY-MM-DD）
 function todayDateStr() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
+  const jst = new Date(Date.now() + JST_OFFSET_MS);
+  const y = jst.getUTCFullYear();
+  const m = String(jst.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(jst.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 

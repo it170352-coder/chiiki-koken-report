@@ -32,6 +32,7 @@ export default async function ReservationsPage() {
       month: "long",
       day: "numeric",
       weekday: "short",
+      timeZone: "Asia/Tokyo",
     });
     if (!groups.has(d)) groups.set(d, []);
     groups.get(d)!.push(r);
@@ -73,6 +74,7 @@ export default async function ReservationsPage() {
                             {new Date(r.pickup_at).toLocaleTimeString("ja-JP", {
                               hour: "2-digit",
                               minute: "2-digit",
+                              timeZone: "Asia/Tokyo",
                             })}
                             受取
                           </span>
