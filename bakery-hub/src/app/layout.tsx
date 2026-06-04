@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Bakery Hub",
   description: "パン屋さんのための業務管理SaaS",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Bakery Hub",
+    statusBarStyle: "default",
+  },
 };
 
 export default function RootLayout({

@@ -1,14 +1,11 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentStore } from "@/lib/store";
 import type { Customer, Product } from "@/lib/types";
 import { createReservation } from "../actions";
 
 export default async function NewReservationPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const [{ data: customers }, { data: products }, { data: profile }] = await Promise.all([
+  const { supabase, storeId } = await getCurrentStore();
+  const [{ data: customers }, { data: products }, { data: store }] = await Promise.all([
     supabase.from("customers").select("id, name").order("name"),
     supabase
       .from("products")
@@ -16,16 +13,16 @@ export default async function NewReservationPage() {
       .eq("is_active", true)
       .order("name"),
     supabase
-      .from("profiles")
+      .from("stores")
       .select("pickup_start, pickup_end, closed_days")
-      .eq("id", user!.id)
-      .single(),
+      .eq("id", storeId ?? "")
+      .maybeSingle(),
   ]);
 
   const WEEKDAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
-  const pickupStart = (profile?.pickup_start ?? "").slice(0, 5);
-  const pickupEnd = (profile?.pickup_end ?? "").slice(0, 5);
-  const closedLabels = (profile?.closed_days ?? "")
+  const pickupStart = (store?.pickup_start ?? "").slice(0, 5);
+  const pickupEnd = (store?.pickup_end ?? "").slice(0, 5);
+  const closedLabels = (store?.closed_days ?? "")
     .split(",")
     .map((s: string) => s.trim())
     .filter(Boolean)

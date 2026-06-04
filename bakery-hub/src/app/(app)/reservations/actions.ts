@@ -2,20 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentStore } from "@/lib/store";
 import type { ReservationStatus } from "@/lib/types";
 
-async function getUserId() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return { supabase, userId: user?.id };
-}
-
 export async function createReservation(formData: FormData) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, userId, storeId } = await getCurrentStore();
+  if (!userId || !storeId) return;
 
   const customerId = String(formData.get("customer_id") ?? "");
   const pickupAt = String(formData.get("pickup_at") ?? "");
@@ -24,6 +16,7 @@ export async function createReservation(formData: FormData) {
   const { data: reservation, error } = await supabase
     .from("reservations")
     .insert({
+      store_id: storeId,
       user_id: userId,
       customer_id: customerId || null,
       pickup_at: new Date(pickupAt).toISOString(),
@@ -59,14 +52,14 @@ export async function updateReservationStatus(
   id: string,
   status: ReservationStatus,
 ) {
-  const { supabase, userId } = await getUserId();
-  if (!userId) return;
+  const { supabase, storeId } = await getCurrentStore();
+  if (!storeId) return;
 
   await supabase
     .from("reservations")
     .update({ status })
     .eq("id", id)
-    .eq("user_id", userId);
+    .eq("store_id", storeId);
 
   revalidatePath("/reservations");
 }

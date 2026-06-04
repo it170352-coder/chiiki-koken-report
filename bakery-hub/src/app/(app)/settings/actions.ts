@@ -1,16 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentStore, canManageStore } from "@/lib/store";
 
 export async function updateStoreSettings(
   formData: FormData,
 ): Promise<{ error: string } | { ok: true }> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
+  const { supabase, storeId, role } = await getCurrentStore();
+  if (!storeId) return { error: "ログインが必要です。" };
+  if (!canManageStore(role)) {
+    return { error: "店舗設定を変更する権限がありません。" };
+  }
 
   const storeName = String(formData.get("store_name") ?? "").trim();
   const pickupStart = String(formData.get("pickup_start") ?? "") || null;
@@ -26,14 +26,14 @@ export async function updateStoreSettings(
   }
 
   const { error } = await supabase
-    .from("profiles")
+    .from("stores")
     .update({
-      store_name: storeName,
+      name: storeName,
       pickup_start: pickupStart,
       pickup_end: pickupEnd,
       closed_days: closedDays,
     })
-    .eq("id", user.id);
+    .eq("id", storeId);
 
   if (error) return { error: "保存に失敗しました。時間をおいて再度お試しください。" };
 
