@@ -1,6 +1,7 @@
 import { getCurrentStore, canManageStore } from "@/lib/store";
 import StoreSettingsForm from "./StoreSettingsForm";
 import PasswordForm from "./PasswordForm";
+import ShopLink from "./ShopLink";
 import { STORE_ROLE_LABELS } from "@/lib/types";
 
 export default async function SettingsPage() {
@@ -47,6 +48,16 @@ export default async function SettingsPage() {
           <p className="text-sm text-gray-500">
             店舗情報の変更はオーナーまたは店長のみ可能です。
           </p>
+        </section>
+      )}
+
+      {storeId && (
+        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+          <h2 className="mb-1 font-semibold text-gray-700">お客様用ネット予約ページ</h2>
+          <p className="mb-3 text-xs text-gray-400">
+            このURLをお客様に共有すると、ログインなしで予約できます（SNSや店頭QRなどに）。
+          </p>
+          <ShopLink storeId={storeId} />
         </section>
       )}
 
