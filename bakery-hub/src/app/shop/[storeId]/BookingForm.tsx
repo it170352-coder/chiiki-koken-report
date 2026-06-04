@@ -151,9 +151,12 @@ export default function BookingForm({
           </div>
         )}
         {total > 0 && (
-          <p className="mt-2 text-right text-sm font-medium text-amber-800">
-            合計 {total.toLocaleString()}円
-          </p>
+          <div className="mt-3 rounded-lg bg-amber-50 py-3 text-center">
+            <span className="text-sm text-gray-500">合計</span>
+            <span className="ml-2 text-2xl font-bold text-amber-800">
+              {total.toLocaleString()}円
+            </span>
+          </div>
         )}
       </div>
 
