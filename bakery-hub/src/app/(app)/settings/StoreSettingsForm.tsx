@@ -13,19 +13,40 @@ const WEEKDAYS = [
   { value: "6", label: "土" },
 ];
 
+function formatDate(iso: string) {
+  const [, m, d] = iso.split("-");
+  return `${Number(m)}月${Number(d)}日`;
+}
+
 export default function StoreSettingsForm({
-  storeName,
   pickupStart,
   pickupEnd,
   closedDays,
+  closedDates,
 }: {
-  storeName: string;
   pickupStart: string;
   pickupEnd: string;
   closedDays: string[];
+  closedDates: string[];
 }) {
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [dates, setDates] = useState<string[]>(() =>
+    [...new Set(closedDates)].sort(),
+  );
+  const [dateInput, setDateInput] = useState("");
+
+  function addDate() {
+    if (!dateInput) return;
+    setDates((prev) =>
+      prev.includes(dateInput) ? prev : [...prev, dateInput].sort(),
+    );
+    setDateInput("");
+  }
+
+  function removeDate(d: string) {
+    setDates((prev) => prev.filter((x) => x !== d));
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,16 +65,6 @@ export default function StoreSettingsForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">店舗名</label>
-        <input
-          name="store_name"
-          defaultValue={storeName}
-          placeholder="例：高槻ベーカリー本店"
-          className={`w-full ${inputCls}`}
-        />
-      </div>
-
-      <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">受取可能な時間帯</label>
         <div className="flex items-center gap-2 text-sm">
           <input type="time" name="pickup_start" defaultValue={pickupStart} className={inputCls} />
@@ -64,7 +75,7 @@ export default function StoreSettingsForm({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">定休日</label>
+        <label className="mb-2 block text-sm font-medium text-gray-700">定休日（毎週）</label>
         <div className="flex flex-wrap gap-3">
           {WEEKDAYS.map((d) => (
             <label key={d.value} className="flex items-center gap-1 text-sm text-gray-700">
@@ -79,6 +90,50 @@ export default function StoreSettingsForm({
             </label>
           ))}
         </div>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-700">臨時休業日（カレンダーで指定）</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="date"
+            value={dateInput}
+            onChange={(e) => setDateInput(e.target.value)}
+            className={inputCls}
+          />
+          <button
+            type="button"
+            onClick={addDate}
+            className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-100"
+          >
+            ＋ 追加
+          </button>
+        </div>
+        {dates.length > 0 ? (
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {dates.map((d) => (
+              <li
+                key={d}
+                className="flex items-center gap-1 rounded-full bg-amber-100 py-1 pl-3 pr-1 text-sm text-amber-800"
+              >
+                <input type="hidden" name="closed_dates" value={d} />
+                {formatDate(d)}
+                <button
+                  type="button"
+                  onClick={() => removeDate(d)}
+                  aria-label={`${formatDate(d)}を削除`}
+                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-amber-700 hover:bg-amber-200"
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-xs text-gray-400">
+            お盆・年末年始などの臨時休業日を、日付ごとに追加できます。
+          </p>
+        )}
       </div>
 
       {msg && (

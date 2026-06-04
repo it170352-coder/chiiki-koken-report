@@ -12,13 +12,22 @@ export async function updateStoreSettings(
     return { error: "店舗設定を変更する権限がありません。" };
   }
 
-  const storeName = String(formData.get("store_name") ?? "").trim();
   const pickupStart = String(formData.get("pickup_start") ?? "") || null;
   const pickupEnd = String(formData.get("pickup_end") ?? "") || null;
   const closedDays = formData
     .getAll("closed_days")
     .map((d) => String(d))
     .filter((d) => /^[0-6]$/.test(d))
+    .join(",");
+  const closedDates = [
+    ...new Set(
+      formData
+        .getAll("closed_dates")
+        .map((d) => String(d))
+        .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)),
+    ),
+  ]
+    .sort()
     .join(",");
 
   if (pickupStart && pickupEnd && pickupStart >= pickupEnd) {
@@ -28,10 +37,10 @@ export async function updateStoreSettings(
   const { error } = await supabase
     .from("stores")
     .update({
-      name: storeName,
       pickup_start: pickupStart,
       pickup_end: pickupEnd,
       closed_days: closedDays,
+      closed_dates: closedDates,
     })
     .eq("id", storeId);
 
