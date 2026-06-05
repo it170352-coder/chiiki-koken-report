@@ -21,6 +21,38 @@ type Props = {
   initialData: HourlyData[];
 };
 
+function HourInput({
+  hour,
+  value,
+  onChange,
+}: {
+  hour: number;
+  value: number;
+  onChange: (hour: number, value: number) => void;
+}) {
+  const [inputValue, setInputValue] = useState(String(value));
+
+  function handleBlur() {
+    const n = Math.max(0, parseInt(inputValue, 10) || 0);
+    setInputValue(String(n));
+    onChange(hour, n);
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <label className="text-xs font-medium text-gray-500">{hour}時</label>
+      <input
+        type="number"
+        min={0}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onBlur={handleBlur}
+        className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm text-gray-900 focus:border-bark-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+    </div>
+  );
+}
+
 export default function VisitorsClient({ date, initialData }: Props) {
   const [counts, setCounts] = useState<Record<number, number>>(() => {
     const map: Record<number, number> = {};
@@ -41,9 +73,8 @@ export default function VisitorsClient({ date, initialData }: Props) {
     来客数: counts[h] ?? 0,
   }));
 
-  function handleChange(hour: number, raw: string) {
-    const n = parseInt(raw, 10);
-    setCounts((prev) => ({ ...prev, [hour]: isNaN(n) || n < 0 ? 0 : n }));
+  function handleChange(hour: number, value: number) {
+    setCounts((prev) => ({ ...prev, [hour]: value }));
     setSaved(false);
   }
 
@@ -76,17 +107,7 @@ export default function VisitorsClient({ date, initialData }: Props) {
         <h2 className="mb-4 font-semibold text-gray-700">時間帯別 来客数入力</h2>
         <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
           {HOURS.map((h) => (
-            <div key={h} className="flex flex-col items-center gap-1">
-              <label className="text-xs font-medium text-gray-500">{h}時</label>
-              <input
-                type="number"
-                min={0}
-                value={counts[h] ?? 0}
-                onChange={(e) => handleChange(h, e.target.value)}
-                onBlur={(e) => handleChange(h, e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-2 py-1.5 text-center text-sm focus:border-bark-500 focus:outline-none"
-              />
-            </div>
+            <HourInput key={h} hour={h} value={counts[h] ?? 0} onChange={handleChange} />
           ))}
         </div>
 
