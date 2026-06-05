@@ -83,6 +83,7 @@ const TEMPLATES: { label: string; items: TemplateItem[] }[] = [
 
 export default function RecipeTemplateButton({ productId }: { productId: string }) {
   const [open, setOpen] = useState(false);
+  const [pressed, setPressed] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -102,8 +103,12 @@ export default function RecipeTemplateButton({ productId }: { productId: string 
     <div className="relative">
       <button
         type="button"
+        onPointerDown={() => setPressed(true)}
+        onPointerUp={() => setPressed(false)}
+        onPointerLeave={() => setPressed(false)}
         onClick={() => { setOpen((v) => !v); setMessage(null); }}
-        className="rounded-lg border border-bark-300 px-3 py-1.5 text-xs font-medium text-bark-700 hover:bg-bark-100 active:scale-95 active:bg-bark-200 transition-all"
+        style={{ transform: pressed ? "scale(0.93)" : "scale(1)", transition: "transform 0.1s" }}
+        className="rounded-lg border border-bark-300 px-3 py-1.5 text-xs font-medium text-bark-700 hover:bg-bark-100"
       >
         テンプレートから追加
       </button>
@@ -124,7 +129,7 @@ export default function RecipeTemplateButton({ productId }: { productId: string 
                   type="button"
                   disabled={pending}
                   onClick={() => handleApply(t)}
-                  className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-bark-50 disabled:opacity-50"
+                  className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-bark-100 active:bg-bark-200 disabled:opacity-50 transition-colors"
                 >
                   {t.label}
                   <span className="ml-1 text-xs text-gray-400">({t.items.length}種)</span>
