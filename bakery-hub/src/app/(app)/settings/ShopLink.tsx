@@ -28,12 +28,12 @@ export default function ShopLink({ storeId }: { storeId: string }) {
           readOnly
           value={url}
           onFocus={(e) => e.currentTarget.select()}
-          className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-600 focus:border-amber-500 focus:outline-none"
+          className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-600 focus:border-bark-500 focus:outline-none"
         />
         <button
           type="button"
           onClick={copy}
-          className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700"
+          className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700"
         >
           {copied ? "コピーしました" : "コピー"}
         </button>
@@ -42,7 +42,7 @@ export default function ShopLink({ storeId }: { storeId: string }) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block text-sm text-amber-700 hover:underline"
+        className="inline-block text-sm text-bark-700 hover:underline"
       >
         予約ページを開く ›
       </a>

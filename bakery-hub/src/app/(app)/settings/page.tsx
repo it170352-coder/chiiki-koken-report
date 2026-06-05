@@ -36,10 +36,10 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-xl font-bold text-amber-900">設定</h1>
+      <h1 className="text-xl font-bold text-bark-900">設定</h1>
 
       {canEdit ? (
-        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+        <section className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-4 font-semibold text-gray-700">店舗情報</h2>
           <StoreSettingsForm
             pickupStart={(store?.pickup_start ?? "").slice(0, 5)}
@@ -49,7 +49,7 @@ export default async function SettingsPage() {
           />
         </section>
       ) : (
-        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+        <section className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-1 font-semibold text-gray-700">店舗情報</h2>
           <p className="text-sm text-gray-500">
             店舗情報の変更はオーナーまたは店長のみ可能です。
@@ -58,7 +58,7 @@ export default async function SettingsPage() {
       )}
 
       {storeId && (
-        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+        <section className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-1 font-semibold text-gray-700">お客様用ネット予約ページ</h2>
           <p className="mb-3 text-xs text-gray-400">
             このURLをお客様に共有すると、ログインなしで予約できます（SNSや店頭QRなどに）。
@@ -68,7 +68,7 @@ export default async function SettingsPage() {
       )}
 
       {canStaff && (
-        <section className="rounded-2xl border border-amber-100 bg-white p-5">
+        <section className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-1 font-semibold text-gray-700">スタッフ管理</h2>
           <p className="mb-4 text-xs text-gray-400">
             お店で働くスタッフのログインアカウントを追加・削除できます（オーナーのみ）。
@@ -80,7 +80,7 @@ export default async function SettingsPage() {
         </section>
       )}
 
-      <section className="rounded-2xl border border-amber-100 bg-white p-5">
+      <section className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-1 font-semibold text-gray-700">パスワード変更</h2>
         <p className="mb-4 text-xs text-gray-400">
           ログイン用のパスワードを変更します。変更後は新しいパスワードでログインしてください。
@@ -88,7 +88,7 @@ export default async function SettingsPage() {
         <PasswordForm />
       </section>
 
-      <section className="rounded-2xl border border-amber-100 bg-white p-5">
+      <section className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-1 font-semibold text-gray-700">アカウント</h2>
         <p className="text-sm text-gray-500">ログイン中：{user?.email}</p>
         {role && (

@@ -48,7 +48,7 @@ export default function Calendar({
           type="button"
           disabled={!canPrev}
           onClick={() => setView(new Date(year, month - 1, 1))}
-          className="rounded px-2 py-1 text-sm text-amber-700 hover:bg-amber-50 disabled:text-gray-300"
+          className="rounded px-2 py-1 text-sm text-bark-700 hover:bg-bark-50 disabled:text-gray-300"
         >
           ‹ 前の月
         </button>
@@ -58,7 +58,7 @@ export default function Calendar({
         <button
           type="button"
           onClick={() => setView(new Date(year, month + 1, 1))}
-          className="rounded px-2 py-1 text-sm text-amber-700 hover:bg-amber-50"
+          className="rounded px-2 py-1 text-sm text-bark-700 hover:bg-bark-50"
         >
           次の月 ›
         </button>
@@ -89,12 +89,12 @@ export default function Calendar({
               className={[
                 "flex h-9 items-center justify-center rounded-lg text-sm",
                 selected
-                  ? "bg-amber-600 font-bold text-white"
+                  ? "bg-bark-600 font-bold text-white"
                   : closed
                     ? "bg-red-50 font-medium text-red-500"
                     : past
                       ? "text-gray-300 line-through"
-                      : "text-gray-700 hover:bg-amber-50",
+                      : "text-gray-700 hover:bg-bark-50",
               ].join(" ")}
             >
               {d.getDate()}

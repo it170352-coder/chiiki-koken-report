@@ -96,8 +96,8 @@ export default function PosClient({ products }: Props) {
               onClick={() => setActiveCategory(cat)}
               className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition ${
                 activeCategory === cat
-                  ? "bg-amber-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-amber-100"
+                  ? "bg-bark-500 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-bark-100"
               }`}
             >
               {cat}
@@ -124,14 +124,14 @@ export default function PosClient({ products }: Props) {
                     className={`relative flex flex-col rounded-xl border p-3 text-left transition active:scale-95 ${
                       outOfStock
                         ? "cursor-not-allowed border-gray-100 bg-gray-50 opacity-50"
-                        : "border-amber-100 bg-white shadow-sm hover:border-amber-300 hover:shadow"
+                        : "border-bark-100 bg-white shadow-sm hover:border-bark-300 hover:shadow"
                     }`}
                   >
                     <span className="line-clamp-2 text-sm font-medium leading-tight text-gray-800">
                       {product.name}
                     </span>
                     <span className="mt-1.5 text-xs text-gray-500">{product.category}</span>
-                    <span className="mt-2 text-base font-bold text-amber-700">
+                    <span className="mt-2 text-base font-bold text-bark-700">
                       ¥{product.price.toLocaleString()}
                     </span>
                     <span className="text-xs text-gray-400">
@@ -159,7 +159,7 @@ export default function PosClient({ products }: Props) {
           <h2 className="font-bold text-gray-800">
             カート
             {cart.length > 0 && (
-              <span className="ml-2 rounded-full bg-amber-500 px-2 py-0.5 text-xs text-white">
+              <span className="ml-2 rounded-full bg-bark-500 px-2 py-0.5 text-xs text-white">
                 {cart.reduce((s, ci) => s + ci.quantity, 0)}点
               </span>
             )}
@@ -198,7 +198,7 @@ export default function PosClient({ products }: Props) {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateQuantity(ci.product.id, -1)}
-                        className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:border-amber-400"
+                        className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:border-bark-400"
                       >
                         −
                       </button>
@@ -207,7 +207,7 @@ export default function PosClient({ products }: Props) {
                       </span>
                       <button
                         onClick={() => updateQuantity(ci.product.id, 1)}
-                        className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:border-amber-400"
+                        className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 text-sm font-bold text-gray-600 hover:border-bark-400"
                       >
                         +
                       </button>
@@ -238,7 +238,7 @@ export default function PosClient({ products }: Props) {
           )}
           <div className="flex justify-between items-center pt-1">
             <span className="text-sm font-medium text-gray-700">合計（税込）</span>
-            <span className="text-xl font-bold text-amber-900">
+            <span className="text-xl font-bold text-bark-900">
               ¥{totalAmount.toLocaleString()}
             </span>
           </div>
@@ -249,7 +249,7 @@ export default function PosClient({ products }: Props) {
           <button
             onClick={() => setShowCheckout(true)}
             disabled={cart.length === 0}
-            className="w-full rounded-xl bg-amber-600 py-3.5 text-base font-bold text-white shadow-sm hover:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full rounded-xl bg-bark-600 py-3.5 text-base font-bold text-white shadow-sm hover:bg-bark-700 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             会計する
           </button>

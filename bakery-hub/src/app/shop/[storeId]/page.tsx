@@ -34,7 +34,7 @@ export default async function ShopPage({
   if (!info) {
     return (
       <main className="mx-auto max-w-lg p-6">
-        <div className="rounded-2xl border border-amber-100 bg-white p-6 text-center">
+        <div className="rounded-2xl border border-bark-100 bg-white p-6 text-center">
           <p className="text-gray-600">店舗が見つかりませんでした。</p>
           <p className="mt-1 text-sm text-gray-400">
             URLが正しいか、お店にご確認ください。
@@ -69,12 +69,12 @@ export default async function ShopPage({
 
   return (
     <main className="mx-auto max-w-lg space-y-5 p-4 sm:p-6">
-      <header className="rounded-2xl bg-amber-600 p-6 text-white">
-        <p className="text-xs text-amber-100">ネット予約</p>
+      <header className="rounded-2xl bg-bark-600 p-6 text-white">
+        <p className="text-xs text-bark-100">ネット予約</p>
         <h1 className="mt-1 text-2xl font-bold">{info.name || "店舗"}</h1>
       </header>
 
-      <section className="rounded-2xl border border-amber-100 bg-white p-5 text-sm">
+      <section className="rounded-2xl border border-bark-100 bg-white p-5 text-sm">
         <h2 className="mb-2 font-semibold text-gray-700">営業のご案内</h2>
         <dl className="space-y-1 text-gray-600">
           <div className="flex gap-2">

@@ -9,9 +9,9 @@ function fmtDate(d: Date) {
 
 function Kpi({ label, value, unit }: { label: string; value: string; unit?: string }) {
   return (
-    <div className="rounded-2xl border border-amber-100 bg-white p-5">
+    <div className="rounded-2xl border border-bark-100 bg-white p-5">
       <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-amber-900">
+      <p className="mt-1 text-2xl font-bold text-bark-900">
         {value}
         {unit && <span className="ml-1 text-sm font-normal text-gray-400">{unit}</span>}
       </p>
@@ -107,24 +107,24 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-bold text-amber-900">販売分析</h1>
+        <h1 className="text-xl font-bold text-bark-900">販売分析</h1>
         <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           <input
             type="date"
             name="from"
             defaultValue={from}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 focus:border-amber-500 focus:outline-none"
+            className="rounded-lg border border-gray-300 px-3 py-1.5 focus:border-bark-500 focus:outline-none"
           />
           <span className="text-gray-400">〜</span>
           <input
             type="date"
             name="to"
             defaultValue={to}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 focus:border-amber-500 focus:outline-none"
+            className="rounded-lg border border-gray-300 px-3 py-1.5 focus:border-bark-500 focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-lg border border-amber-300 px-3 py-1.5 font-medium text-amber-700 hover:bg-amber-50"
+            className="rounded-lg border border-bark-300 px-3 py-1.5 font-medium text-bark-700 hover:bg-bark-50"
           >
             表示
           </button>
@@ -142,7 +142,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
         <Kpi label="廃棄率" value={wasteRate.toFixed(1)} unit="%" />
       </div>
 
-      <div className="rounded-2xl border border-amber-100 bg-white p-5">
+      <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-4 font-semibold text-gray-700">日別売上推移</h2>
         {dailySeries.length === 0 ? (
           <p className="text-sm text-gray-400">この期間の在庫記録がありません。</p>
@@ -151,9 +151,9 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
             {dailySeries.map(([date, sales]) => (
               <div key={date} className="flex items-center gap-3 text-sm">
                 <span className="w-20 shrink-0 text-gray-500">{date.slice(5)}</span>
-                <div className="h-5 flex-1 overflow-hidden rounded bg-amber-50">
+                <div className="h-5 flex-1 overflow-hidden rounded bg-bark-50">
                   <div
-                    className="h-full rounded bg-amber-500"
+                    className="h-full rounded bg-bark-500"
                     style={{ width: `${Math.max(2, (sales / dailyMax) * 100)}%` }}
                   />
                 </div>
@@ -166,7 +166,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
         )}
       </div>
 
-      <div className="rounded-2xl border border-amber-100 bg-white p-5">
+      <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-4 font-semibold text-gray-700">カテゴリ別売上</h2>
         {categoryRanking.length === 0 ? (
           <p className="text-sm text-gray-400">データがありません。</p>
@@ -175,9 +175,9 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
             {categoryRanking.map((c) => (
               <div key={c.name} className="flex items-center gap-3 text-sm">
                 <span className="w-24 shrink-0 text-gray-600">{c.name}</span>
-                <div className="h-5 flex-1 overflow-hidden rounded bg-amber-50">
+                <div className="h-5 flex-1 overflow-hidden rounded bg-bark-50">
                   <div
-                    className="h-full rounded bg-amber-500"
+                    className="h-full rounded bg-bark-500"
                     style={{ width: `${Math.max(2, (c.sales / categoryMax) * 100)}%` }}
                   />
                 </div>
@@ -192,7 +192,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-amber-100 bg-white p-5">
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">商品別売上ランキング</h2>
           {productRanking.length === 0 ? (
             <p className="text-sm text-gray-400">データがありません。</p>
@@ -201,7 +201,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
               {productRanking.map((p, i) => (
                 <li key={i} className="flex items-center justify-between text-sm">
                   <span className="text-gray-700">
-                    <span className="mr-2 font-bold text-amber-600">{i + 1}</span>
+                    <span className="mr-2 font-bold text-bark-600">{i + 1}</span>
                     {p.name}
                     <span className="ml-2 text-xs text-gray-400">{p.qty}個</span>
                   </span>
@@ -212,7 +212,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
           )}
         </div>
 
-        <div className="rounded-2xl border border-amber-100 bg-white p-5">
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">廃棄の多い商品</h2>
           {wasteRanking.length === 0 ? (
             <p className="text-sm text-gray-400">この期間の廃棄はありません。</p>

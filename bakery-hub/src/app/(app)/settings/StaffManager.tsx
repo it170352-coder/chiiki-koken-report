@@ -20,7 +20,7 @@ export default function StaffManager({
   const [pending, startTransition] = useTransition();
 
   const inputCls =
-    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none";
+    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none";
 
   if (!available) {
     return (
@@ -165,7 +165,7 @@ export default function StaffManager({
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+          className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
           {pending ? "処理中…" : "スタッフを追加"}
         </button>

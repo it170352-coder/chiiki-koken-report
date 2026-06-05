@@ -35,15 +35,15 @@ export default function NavBar({ storeName }: { storeName: string }) {
             onClick={onNavigate}
             className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
               isActive(l.href)
-                ? "bg-amber-100 text-amber-900"
-                : "text-gray-600 hover:bg-amber-50"
+                ? "bg-bark-100 text-bark-900"
+                : "text-gray-600 hover:bg-bark-50"
             }`}
           >
             {l.label}
           </Link>
         ))}
         <form action={logout} className="mt-1">
-          <button className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-400 hover:bg-amber-50 hover:text-gray-600">
+          <button className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-400 hover:bg-bark-50 hover:text-gray-600">
             ログアウト
           </button>
         </form>
@@ -54,9 +54,9 @@ export default function NavBar({ storeName }: { storeName: string }) {
   return (
     <>
       {/* タブレット以上：左サイドメニュー */}
-      <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-amber-100 bg-white px-3 py-5 md:flex">
+      <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-bark-100 bg-white px-3 py-5 md:flex">
         <div className="px-3">
-          <span className="text-lg font-bold text-amber-900">Bakery Hub</span>
+          <span className="text-lg font-bold text-bark-900">Bakery Hub</span>
           {storeName && (
             <p className="mt-0.5 text-xs text-gray-400">{storeName}</p>
           )}
@@ -67,11 +67,11 @@ export default function NavBar({ storeName }: { storeName: string }) {
       </aside>
 
       {/* スマホ：上部バー＋ハンバーガー */}
-      <header className="sticky top-0 z-20 border-b border-amber-100 bg-white md:hidden">
+      <header className="sticky top-0 z-20 border-b border-bark-100 bg-white md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-lg font-bold text-amber-900">Bakery Hub</span>
+          <span className="text-lg font-bold text-bark-900">Bakery Hub</span>
           <button
-            className="rounded-lg p-2 text-gray-600 hover:bg-amber-50"
+            className="rounded-lg p-2 text-gray-600 hover:bg-bark-50"
             onClick={() => setOpen((v) => !v)}
             aria-label="メニュー"
           >
@@ -83,7 +83,7 @@ export default function NavBar({ storeName }: { storeName: string }) {
           </button>
         </div>
         {open && (
-          <nav className="flex flex-col gap-1 border-t border-amber-100 px-4 py-2">
+          <nav className="flex flex-col gap-1 border-t border-bark-100 px-4 py-2">
             <NavLinks onNavigate={() => setOpen(false)} />
           </nav>
         )}

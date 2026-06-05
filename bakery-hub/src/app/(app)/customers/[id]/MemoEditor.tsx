@@ -32,13 +32,13 @@ export default function MemoEditor({
         }}
         rows={3}
         placeholder="例：くるみパンが好き。卵アレルギーあり。"
-        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
+        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
       />
       <div className="flex items-center gap-3">
         <button
           onClick={handleSave}
           disabled={pending}
-          className="rounded-lg bg-amber-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+          className="rounded-lg bg-bark-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
           {pending ? "保存中..." : "メモを保存"}
         </button>

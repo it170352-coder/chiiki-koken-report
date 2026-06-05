@@ -32,7 +32,7 @@ export default function BookingForm({
   const [done, setDone] = useState(false);
 
   const inputCls =
-    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none";
+    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none";
 
   function setQty(id: string, v: number) {
     setQuantities((prev) => ({ ...prev, [id]: Math.max(0, v) }));
@@ -103,7 +103,7 @@ export default function BookingForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl border border-amber-100 bg-white p-5"
+      className="space-y-5 rounded-2xl border border-bark-100 bg-white p-5"
     >
       <h2 className="font-semibold text-gray-700">ご予約内容</h2>
 
@@ -135,7 +135,7 @@ export default function BookingForm({
                     min={0}
                     value={quantities[p.id] ?? 0}
                     onChange={(e) => setQty(p.id, Number(e.target.value))}
-                    className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-amber-500 focus:outline-none"
+                    className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-bark-500 focus:outline-none"
                   />
                   <button
                     type="button"
@@ -151,9 +151,9 @@ export default function BookingForm({
           </div>
         )}
         {total > 0 && (
-          <div className="mt-3 rounded-lg bg-amber-50 py-3 text-center">
+          <div className="mt-3 rounded-lg bg-bark-50 py-3 text-center">
             <span className="text-sm text-gray-500">合計</span>
-            <span className="ml-2 text-2xl font-bold text-amber-800">
+            <span className="ml-2 text-2xl font-bold text-bark-800">
               {total.toLocaleString()}円
             </span>
           </div>
@@ -235,7 +235,7 @@ export default function BookingForm({
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-lg bg-amber-600 px-5 py-3 text-base font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-bark-600 px-5 py-3 text-base font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
       >
         {submitting ? "送信中…" : "この内容で予約する"}
       </button>

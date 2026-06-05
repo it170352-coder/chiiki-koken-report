@@ -60,7 +60,7 @@ export default function StoreSettingsForm({
   }
 
   const inputCls =
-    "rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none";
+    "rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -84,7 +84,7 @@ export default function StoreSettingsForm({
                 name="closed_days"
                 value={d.value}
                 defaultChecked={closedDays.includes(d.value)}
-                className="h-4 w-4 accent-amber-600"
+                className="h-4 w-4 accent-bark-600"
               />
               {d.label}
             </label>
@@ -104,7 +104,7 @@ export default function StoreSettingsForm({
           <button
             type="button"
             onClick={addDate}
-            className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-100"
+            className="rounded-lg border border-bark-300 bg-bark-50 px-3 py-2 text-sm font-medium text-bark-700 hover:bg-bark-100"
           >
             ＋ 追加
           </button>
@@ -114,7 +114,7 @@ export default function StoreSettingsForm({
             {dates.map((d) => (
               <li
                 key={d}
-                className="flex items-center gap-1 rounded-full bg-amber-100 py-1 pl-3 pr-1 text-sm text-amber-800"
+                className="flex items-center gap-1 rounded-full bg-bark-100 py-1 pl-3 pr-1 text-sm text-bark-800"
               >
                 <input type="hidden" name="closed_dates" value={d} />
                 {formatDate(d)}
@@ -122,7 +122,7 @@ export default function StoreSettingsForm({
                   type="button"
                   onClick={() => removeDate(d)}
                   aria-label={`${formatDate(d)}を削除`}
-                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-amber-700 hover:bg-amber-200"
+                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-bark-700 hover:bg-bark-200"
                 >
                   ×
                 </button>
@@ -143,7 +143,7 @@ export default function StoreSettingsForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+        className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
       >
         {pending ? "保存中…" : "保存する"}
       </button>
