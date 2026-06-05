@@ -11,9 +11,12 @@ function todayJST(): string {
   return `${y}-${m}-${d}`;
 }
 
-export default async function VisitorsPage() {
-  const { supabase, storeId } = await getCurrentStore();
+export default async function VisitorsPage(props: PageProps<"/visitors">) {
+  const sp = await props.searchParams;
   const today = todayJST();
+  const date = typeof sp.date === "string" && sp.date ? sp.date : today;
+
+  const { supabase, storeId } = await getCurrentStore();
 
   let initialData: { hour: number; count: number }[] = [];
 
@@ -22,7 +25,7 @@ export default async function VisitorsPage() {
       .from("hourly_visitors")
       .select("hour, visitor_count")
       .eq("store_id", storeId)
-      .eq("date", today);
+      .eq("date", date);
 
     initialData = (data ?? []).map((row) => ({
       hour: row.hour as number,
@@ -32,8 +35,24 @@ export default async function VisitorsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold text-bark-900">来客数</h1>
-      <VisitorsClient date={today} initialData={initialData} />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-bold text-bark-900">来客数</h1>
+        <form method="get" className="flex items-center gap-2">
+          <input
+            type="date"
+            name="date"
+            defaultValue={date}
+            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-bark-500 focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="rounded-lg border border-bark-300 px-3 py-1.5 text-sm font-medium text-bark-700 hover:bg-bark-50"
+          >
+            表示
+          </button>
+        </form>
+      </div>
+      <VisitorsClient date={date} initialData={initialData} />
     </div>
   );
 }
