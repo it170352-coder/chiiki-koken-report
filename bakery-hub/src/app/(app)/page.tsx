@@ -200,10 +200,6 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-2 gap-3">
         <Stat label="本日の売上" value={`¥${todaySales.toLocaleString()}`} />
         <Stat label="本日の在庫記録" value={logs?.length ?? 0} unit="品" />
-        <Link href="/visitors" className="block">
-          <Stat label="本日の来客数" value={todayVisitors} unit="人" />
-        </Link>
-        <Stat label="本日の予約数" value={todayReservationCount ?? 0} unit="件" />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
