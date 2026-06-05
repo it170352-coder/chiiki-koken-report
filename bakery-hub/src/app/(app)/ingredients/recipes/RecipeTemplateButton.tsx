@@ -103,7 +103,7 @@ export default function RecipeTemplateButton({ productId }: { productId: string 
       <button
         type="button"
         onClick={() => { setOpen((v) => !v); setMessage(null); }}
-        className="rounded-lg border border-bark-300 px-3 py-1.5 text-xs font-medium text-bark-700 hover:bg-bark-50"
+        className="rounded-lg border border-bark-300 px-3 py-1.5 text-xs font-medium text-bark-700 hover:bg-bark-100 active:scale-95 active:bg-bark-200 transition-all"
       >
         テンプレートから追加
       </button>
