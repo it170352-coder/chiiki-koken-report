@@ -56,16 +56,16 @@ export default async function NewReservationPage() {
     <div className="space-y-6">
       <Link
         href="/reservations"
-        className="text-sm text-amber-700 hover:underline"
+        className="text-sm text-bark-700 hover:underline"
       >
         ‹ 予約一覧に戻る
       </Link>
 
-      <h1 className="text-xl font-bold text-amber-900">新規予約の登録</h1>
+      <h1 className="text-xl font-bold text-bark-900">新規予約の登録</h1>
 
       <form
         action={createReservation}
-        className="space-y-5 rounded-2xl border border-amber-100 bg-white p-5"
+        className="space-y-5 rounded-2xl border border-bark-100 bg-white p-5"
       >
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -73,7 +73,7 @@ export default async function NewReservationPage() {
           </label>
           <select
             name="customer_id"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
           >
             <option value="">（顧客を指定しない）</option>
             {customerList.map((c) => (
@@ -92,7 +92,7 @@ export default async function NewReservationPage() {
             type="datetime-local"
             name="pickup_at"
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
           />
           {(pickupHint || closedHint || closedDatesHint) && (
             <p className="mt-1 text-xs text-gray-400">
@@ -125,7 +125,7 @@ export default async function NewReservationPage() {
                     name="quantity"
                     min={0}
                     defaultValue={0}
-                    className="w-20 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-amber-500 focus:outline-none"
+                    className="w-20 rounded-lg border border-gray-300 px-2 py-1 text-sm focus:border-bark-500 focus:outline-none"
                   />
                 </div>
               ))}
@@ -141,13 +141,13 @@ export default async function NewReservationPage() {
             name="memo"
             rows={2}
             placeholder="例：のし希望、アレルギー対応など"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
           />
         </div>
 
         <button
           type="submit"
-          className="rounded-lg bg-amber-600 px-5 py-2 text-sm font-semibold text-white hover:bg-amber-700"
+          className="rounded-lg bg-bark-600 px-5 py-2 text-sm font-semibold text-white hover:bg-bark-700"
         >
           予約を登録する
         </button>

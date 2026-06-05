@@ -54,7 +54,7 @@ function Stepper({
           value={inputValue}
           onChange={handleChange}
           onBlur={handleBlur}
-          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm text-gray-900 focus:border-bark-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           type="button"
@@ -109,7 +109,7 @@ export default function InventoryRow({
   }
 
   return (
-    <div className="rounded-2xl border border-amber-100 bg-white p-4">
+    <div className="rounded-2xl border border-bark-100 bg-white p-4">
       <div className="flex flex-wrap items-end gap-3">
         <span className="min-w-[6rem] flex-1 self-center font-medium text-gray-800">
           {productName}
@@ -142,7 +142,7 @@ export default function InventoryRow({
           残数
           <span
             className={`mt-1 w-14 text-center text-base font-bold ${
-              remaining < 0 ? "text-red-500" : "text-amber-700"
+              remaining < 0 ? "text-red-500" : "text-bark-700"
             }`}
           >
             {remaining}
@@ -151,7 +151,7 @@ export default function InventoryRow({
         <button
           onClick={handleSave}
           disabled={pending}
-          className="self-center rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+          className="self-center rounded-lg bg-bark-600 px-3 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
           {pending ? "保存中" : saved ? "保存済" : "保存"}
         </button>
@@ -163,7 +163,7 @@ export default function InventoryRow({
             setP(prevProduced);
             setSaved(false);
           }}
-          className="mt-2 text-xs text-amber-700 hover:underline"
+          className="mt-2 text-xs text-bark-700 hover:underline"
         >
           前日の製造数（{prevProduced}）をコピー
         </button>

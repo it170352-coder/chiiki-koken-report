@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f4;
+  --foreground: #1c1410;
 }
 
 @theme inline {
@@ -10,13 +10,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* NOARIS風：木・コンクリート・ドライフラワーのナチュラルパレット */
+  --color-bark-50: #faf8f4;
+  --color-bark-100: #f0e9df;
+  --color-bark-200: #ddd0c2;
+  --color-bark-300: #c5b09a;
+  --color-bark-400: #a98870;
+  --color-bark-500: #8e6a50;
+  --color-bark-600: #7a5540;
+  --color-bark-700: #654535;
+  --color-bark-800: #4a3225;
+  --color-bark-900: #2e1f14;
 }
 
 body {

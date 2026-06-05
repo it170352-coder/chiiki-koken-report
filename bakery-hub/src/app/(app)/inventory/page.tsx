@@ -56,17 +56,17 @@ export default async function InventoryPage(
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-bold text-amber-900">在庫・廃棄記録</h1>
+        <h1 className="text-xl font-bold text-bark-900">在庫・廃棄記録</h1>
         <form method="get" className="flex items-center gap-2">
           <input
             type="date"
             name="date"
             defaultValue={date}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-amber-500 focus:outline-none"
+            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-bark-500 focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-lg border border-amber-300 px-3 py-1.5 text-sm font-medium text-amber-700 hover:bg-amber-50"
+            className="rounded-lg border border-bark-300 px-3 py-1.5 text-sm font-medium text-bark-700 hover:bg-bark-50"
           >
             表示
           </button>
@@ -75,11 +75,11 @@ export default async function InventoryPage(
 
       <p className="text-sm text-gray-500">
         製造数・販売数・廃棄数を入力すると、残数（製造 − 販売 − 廃棄）が自動計算されます。この日の廃棄合計：
-        <span className="font-semibold text-amber-700">{totalWasted} 個</span>
+        <span className="font-semibold text-bark-700">{totalWasted} 個</span>
       </p>
 
       {productList.length === 0 ? (
-        <p className="rounded-2xl border border-amber-100 bg-white p-5 text-sm text-gray-400">
+        <p className="rounded-2xl border border-bark-100 bg-white p-5 text-sm text-gray-400">
           商品が登録されていません。「商品」ページから登録してください。
         </p>
       ) : (

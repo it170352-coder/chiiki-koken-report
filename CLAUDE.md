@@ -55,3 +55,34 @@
   - 例）「デジタルマーケティング業界では一般的に〇〇とされている（出典：特定の研究なし）」
 
 出典が見つからない・確認できない場合は、推測で書かず「未確認」と記載すること。
+
+---
+
+## Bakery Hub SaaS（01_SaaS企画/、bakery-hub/）
+
+### 現状（2026-06-04 時点）
+
+- ステータス: 本番デプロイ済み・スタッフ管理機能実装済み（実画面確認は次回）
+- 本番URL: https://bakery-hub-ten.vercel.app（稼働中）
+- アプリ本体: bakery-hub/（Next.js 16 + React 19 + TypeScript + Tailwind + Supabase）
+- Supabase URL: https://qmmnrxbekvmopdpxdrji.supabase.co
+- 認証: Confirm email を現在無効化中。本番移行時はカスタムSMTP設定後に再有効化すること
+- 環境変数: SUPABASE_SERVICE_ROLE_KEY を Vercel に登録済み（NEXT_PUBLIC_ なし）
+
+### 今セッションで実装・デプロイしたもの（コミット 6c7ef4f）
+
+- カレンダー定休日の赤色表示
+- 予約ページの合計金額表示を大きく中央配置
+- 顧客一覧タップ不具合修正（SwipeToDelete.tsx の pointerCapture 方式変更）
+- スタッフ管理機能（設定画面・オーナー専用）新規追加
+
+### 次回やるべきこと
+
+1. スタッフ管理機能の実画面確認（石田さん本人がオーナーでログインして確認）
+2. カスタムSMTP設定 + Confirm email 再有効化
+3. 営業スライド（Bakery_Hub_営業提案資料.pptx）のファクトチェック
+
+### 触ってほしくないファイル（追加）
+
+- bakery-hub/.env.local（秘密情報。gitignore 済み）
+- 01_SaaS企画/Bakery_Hub_営業スライド生成.js（動作確認済みスクリプト）

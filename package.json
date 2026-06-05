@@ -1,0 +1,24 @@
+{
+  "name": "claude-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "create_slides.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/it170352-coder/chiiki-koken-report.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/it170352-coder/chiiki-koken-report/issues"
+  },
+  "homepage": "https://github.com/it170352-coder/chiiki-koken-report#readme",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

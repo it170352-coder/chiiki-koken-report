@@ -27,9 +27,9 @@ function todayDateStr() {
 
 function Stat({ label, value, unit }: { label: string; value: number | string; unit?: string }) {
   return (
-    <div className="rounded-2xl border border-amber-100 bg-white p-5">
+    <div className="rounded-2xl border border-bark-100 bg-white p-5">
       <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-amber-900">
+      <p className="mt-1 text-2xl font-bold text-bark-900">
         {value}
         {unit && <span className="ml-1 text-sm font-normal text-gray-400">{unit}</span>}
       </p>
@@ -100,28 +100,28 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-amber-900">ダッシュボード</h1>
+      <h1 className="text-xl font-bold text-bark-900">ダッシュボード</h1>
 
       {productCount === 0 ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-          <h2 className="font-semibold text-amber-900">はじめに（かんたん3ステップ）</h2>
-          <ol className="mt-3 space-y-2 text-sm text-amber-900">
+        <div className="rounded-2xl border border-bark-200 bg-bark-50 p-5">
+          <h2 className="font-semibold text-bark-900">はじめに（かんたん3ステップ）</h2>
+          <ol className="mt-3 space-y-2 text-sm text-bark-900">
             <li>
-              <span className="mr-2 font-bold text-amber-600">1</span>
+              <span className="mr-2 font-bold text-bark-600">1</span>
               <Link href="/products" className="font-medium underline hover:no-underline">
                 商品を登録
               </Link>
               （パンの名前と値段）
             </li>
             <li>
-              <span className="mr-2 font-bold text-amber-600">2</span>
+              <span className="mr-2 font-bold text-bark-600">2</span>
               <Link href="/inventory" className="font-medium underline hover:no-underline">
                 在庫を記録
               </Link>
               （その日の製造・販売・廃棄）
             </li>
             <li>
-              <span className="mr-2 font-bold text-amber-600">3</span>
+              <span className="mr-2 font-bold text-bark-600">3</span>
               <Link href="/reservations/new" className="font-medium underline hover:no-underline">
                 予約を登録
               </Link>
@@ -133,25 +133,25 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Link
             href="/inventory"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl bg-amber-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-amber-700"
+            className="flex min-h-[88px] items-center justify-center rounded-2xl bg-bark-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-bark-700"
           >
             在庫を記録
           </Link>
           <Link
             href="/reservations/new"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl bg-amber-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-amber-700"
+            className="flex min-h-[88px] items-center justify-center rounded-2xl bg-bark-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-bark-700"
           >
             新規予約
           </Link>
           <Link
             href="/customers"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl border border-amber-300 bg-white px-4 py-5 text-center text-base font-semibold text-amber-700 hover:bg-amber-50"
+            className="flex min-h-[88px] items-center justify-center rounded-2xl border border-bark-300 bg-white px-4 py-5 text-center text-base font-semibold text-bark-700 hover:bg-bark-50"
           >
             顧客を見る
           </Link>
           <Link
             href="/products"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl border border-amber-300 bg-white px-4 py-5 text-center text-base font-semibold text-amber-700 hover:bg-amber-50"
+            className="flex min-h-[88px] items-center justify-center rounded-2xl border border-bark-300 bg-white px-4 py-5 text-center text-base font-semibold text-bark-700 hover:bg-bark-50"
           >
             商品を管理
           </Link>
@@ -166,7 +166,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-amber-100 bg-white p-5">
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">人気商品ランキング（本日の販売実績）</h2>
           {ranking.length === 0 ? (
             <p className="text-sm text-gray-400">本日の販売データがありません。</p>
@@ -175,7 +175,7 @@ export default async function DashboardPage() {
               {ranking.map((r, i) => (
                 <li key={i} className="flex items-center justify-between text-sm">
                   <span className="text-gray-700">
-                    <span className="mr-2 font-bold text-amber-600">{i + 1}</span>
+                    <span className="mr-2 font-bold text-bark-600">{i + 1}</span>
                     {r.name}
                   </span>
                   <span className="font-medium text-gray-500">{r.qty} 個</span>
@@ -185,12 +185,12 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-amber-100 bg-white p-5">
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">在庫状況（本日・残数の少ない順）</h2>
           {stock.length === 0 ? (
             <p className="text-sm text-gray-400">
               本日の在庫記録がありません。
-              <Link href="/inventory" className="ml-1 text-amber-700 hover:underline">
+              <Link href="/inventory" className="ml-1 text-bark-700 hover:underline">
                 在庫を入力
               </Link>
             </p>

@@ -60,7 +60,7 @@ export default function ReceiptClient({ sale, items, store }: Props) {
           </button>
           <button
             onClick={() => window.print()}
-            className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white hover:bg-amber-700"
+            className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-bold text-white hover:bg-bark-700"
           >
             印刷する
           </button>

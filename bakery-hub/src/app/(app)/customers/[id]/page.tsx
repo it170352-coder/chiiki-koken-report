@@ -40,12 +40,12 @@ export default async function CustomerDetailPage(
 
   return (
     <div className="space-y-6">
-      <Link href="/customers" className="text-sm text-amber-700 hover:underline">
+      <Link href="/customers" className="text-sm text-bark-700 hover:underline">
         ‹ 顧客一覧に戻る
       </Link>
 
-      <div className="rounded-2xl border border-amber-100 bg-white p-5">
-        <h1 className="text-xl font-bold text-amber-900">{c.name}</h1>
+      <div className="rounded-2xl border border-bark-100 bg-white p-5">
+        <h1 className="text-xl font-bold text-bark-900">{c.name}</h1>
         <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-gray-400">電話番号</dt>
@@ -62,12 +62,12 @@ export default async function CustomerDetailPage(
         </dl>
       </div>
 
-      <div className="rounded-2xl border border-amber-100 bg-white p-5">
+      <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-3 font-semibold text-gray-700">メモ（好み・アレルギー等）</h2>
         <MemoEditor customerId={c.id} initialMemo={c.memo ?? ""} />
       </div>
 
-      <div className="rounded-2xl border border-amber-100 bg-white p-5">
+      <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-3 font-semibold text-gray-700">予約・購入履歴</h2>
         {history.length === 0 ? (
           <p className="text-sm text-gray-400">予約履歴はまだありません。</p>
@@ -76,7 +76,7 @@ export default async function CustomerDetailPage(
             {history.map((r) => (
               <li
                 key={r.id}
-                className="flex items-start justify-between border-b border-amber-50 pb-3 last:border-0"
+                className="flex items-start justify-between border-b border-bark-50 pb-3 last:border-0"
               >
                 <div>
                   <p className="text-sm text-gray-700">

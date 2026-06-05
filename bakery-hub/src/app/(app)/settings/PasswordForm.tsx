@@ -34,7 +34,7 @@ export default function PasswordForm() {
   }
 
   const inputCls =
-    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none";
+    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -68,7 +68,7 @@ export default function PasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
+        className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
       >
         {loading ? "変更中…" : "パスワードを変更"}
       </button>

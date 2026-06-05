@@ -49,14 +49,14 @@ export default function CheckoutModal({ cartItems, totalAmount, onClose }: Props
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
         <div className="border-b border-gray-100 px-5 py-4">
-          <h2 className="text-lg font-bold text-amber-900">会計</h2>
+          <h2 className="text-lg font-bold text-bark-900">会計</h2>
         </div>
 
         <div className="space-y-5 px-5 py-4">
           {/* 合計金額 */}
-          <div className="rounded-xl bg-amber-50 px-4 py-3 text-center">
+          <div className="rounded-xl bg-bark-50 px-4 py-3 text-center">
             <p className="text-sm text-gray-500">お会計金額</p>
-            <p className="text-3xl font-bold text-amber-900">
+            <p className="text-3xl font-bold text-bark-900">
               ¥{totalAmount.toLocaleString()}
             </p>
           </div>
@@ -73,8 +73,8 @@ export default function CheckoutModal({ cartItems, totalAmount, onClose }: Props
                     onClick={() => setPaymentMethod(method)}
                     className={`rounded-lg border py-2.5 text-sm font-medium transition ${
                       paymentMethod === method
-                        ? "border-amber-500 bg-amber-500 text-white"
-                        : "border-gray-200 text-gray-700 hover:border-amber-300"
+                        ? "border-bark-500 bg-bark-500 text-white"
+                        : "border-gray-200 text-gray-700 hover:border-bark-300"
                     }`}
                   >
                     {labels[method]}
@@ -93,7 +93,7 @@ export default function CheckoutModal({ cartItems, totalAmount, onClose }: Props
                   <button
                     key={amt}
                     onClick={() => setCashReceived(String(amt))}
-                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:border-amber-300 hover:bg-amber-50"
+                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:border-bark-300 hover:bg-bark-50"
                   >
                     ¥{amt.toLocaleString()}
                   </button>
@@ -105,7 +105,7 @@ export default function CheckoutModal({ cartItems, totalAmount, onClose }: Props
                 onChange={(e) => setCashReceived(e.target.value)}
                 placeholder="金額を入力"
                 min={totalAmount}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-right text-lg focus:border-amber-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-right text-lg focus:border-bark-500 focus:outline-none"
               />
               {cashReceivedNum > 0 && change !== null && (
                 <div
@@ -136,7 +136,7 @@ export default function CheckoutModal({ cartItems, totalAmount, onClose }: Props
           <button
             onClick={handleConfirm}
             disabled={!canConfirm || isPending}
-            className="flex-1 rounded-lg bg-amber-600 py-3 text-sm font-bold text-white hover:bg-amber-700 disabled:opacity-40"
+            className="flex-1 rounded-lg bg-bark-600 py-3 text-sm font-bold text-white hover:bg-bark-700 disabled:opacity-40"
           >
             {isPending ? "処理中..." : "確定"}
           </button>

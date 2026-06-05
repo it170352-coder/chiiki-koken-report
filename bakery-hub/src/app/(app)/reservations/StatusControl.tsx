@@ -25,7 +25,7 @@ export default function StatusControl({
           updateReservationStatus(id, e.target.value as ReservationStatus),
         )
       }
-      className={`shrink-0 cursor-pointer rounded-full border-0 px-2.5 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 ${STATUS_COLORS[status]}`}
+      className={`shrink-0 cursor-pointer rounded-full border-0 px-2.5 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-bark-400 ${STATUS_COLORS[status]}`}
     >
       {ORDER.map((s) => (
         <option key={s} value={s}>
