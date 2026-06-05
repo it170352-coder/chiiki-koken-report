@@ -11,17 +11,17 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* wheat系ナチュラルパレット */
-  --color-bark-50: #fdfaf3;
-  --color-bark-100: #f9f0d9;
-  --color-bark-200: #f5deb3;
-  --color-bark-300: #edc97a;
-  --color-bark-400: #e0b24a;
-  --color-bark-500: #c99830;
-  --color-bark-600: #a97d22;
-  --color-bark-700: #8a631b;
-  --color-bark-800: #634818;
-  --color-bark-900: #3d2d10;
+  /* #f3cfa9ベースのナチュラルパレット */
+  --color-bark-50: #fdf8f2;
+  --color-bark-100: #faeddd;
+  --color-bark-200: #f3cfa9;
+  --color-bark-300: #eab87e;
+  --color-bark-400: #df9f58;
+  --color-bark-500: #cc8438;
+  --color-bark-600: #b06a28;
+  --color-bark-700: #8e5320;
+  --color-bark-800: #663c18;
+  --color-bark-900: #3d2410;
 }
 
 body {
