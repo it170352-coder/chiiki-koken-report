@@ -206,65 +206,6 @@ export default async function DashboardPage() {
         <Stat label="本日の在庫記録" value={logs?.length ?? 0} unit="品" />
       </div>
 
-      {/* 原材料カード */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Link
-          href="/ingredients"
-          className="block rounded-2xl border border-bark-100 bg-white p-5 hover:bg-bark-50"
-        >
-          <h2 className="mb-3 font-semibold text-gray-700">原材料 在庫アラート</h2>
-          {ingredientList.length === 0 ? (
-            <p className="text-sm text-gray-400">原材料が登録されていません。</p>
-          ) : alertCount === 0 && cautionCount === 0 ? (
-            <p className="text-sm text-green-600 font-medium">すべて正常です。</p>
-          ) : (
-            <div className="space-y-1">
-              {alertCount > 0 && (
-                <p className="text-sm font-semibold text-red-600">
-                  発注推奨: {alertCount} 件
-                </p>
-              )}
-              {cautionCount > 0 && (
-                <p className="text-sm font-semibold text-yellow-600">
-                  注意: {cautionCount} 件
-                </p>
-              )}
-            </div>
-          )}
-        </Link>
-
-        <div className="rounded-2xl border border-bark-100 bg-white p-5">
-          <h2 className="mb-3 font-semibold text-gray-700">製造可能数（レシピ登録済み商品）</h2>
-          {producibleList.length === 0 ? (
-            <p className="text-sm text-gray-400">
-              レシピが登録されていません。
-              <Link href="/ingredients/recipes" className="ml-1 text-bark-700 hover:underline">
-                レシピを登録
-              </Link>
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {producibleList.slice(0, 6).map((p, i) => (
-                <li key={i} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-700">{p.name}</span>
-                  <span
-                    className={`font-semibold ${
-                      p.count === 0
-                        ? "text-red-500"
-                        : p.count <= 10
-                        ? "text-yellow-600"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {p.count} 個製造可能
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">人気商品ランキング（本日の販売実績）</h2>
@@ -305,6 +246,53 @@ export default async function DashboardPage() {
                     }`}
                   >
                     残 {s.remaining}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      {/* 原材料在庫アラート（一番下） */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Link
+          href="/ingredients"
+          className="block rounded-2xl border border-bark-100 bg-white p-5 hover:bg-bark-50"
+        >
+          <h2 className="mb-3 font-semibold text-gray-700">原材料 在庫アラート</h2>
+          {ingredientList.length === 0 ? (
+            <p className="text-sm text-gray-400">原材料が登録されていません。</p>
+          ) : alertCount === 0 && cautionCount === 0 ? (
+            <p className="text-sm font-medium text-green-600">すべて正常です。</p>
+          ) : (
+            <div className="space-y-1">
+              {alertCount > 0 && (
+                <p className="text-sm font-semibold text-red-600">発注推奨: {alertCount} 件</p>
+              )}
+              {cautionCount > 0 && (
+                <p className="text-sm font-semibold text-yellow-600">注意: {cautionCount} 件</p>
+              )}
+            </div>
+          )}
+        </Link>
+
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
+          <h2 className="mb-3 font-semibold text-gray-700">製造可能数（レシピ登録済み商品）</h2>
+          {producibleList.length === 0 ? (
+            <p className="text-sm text-gray-400">
+              レシピが登録されていません。
+              <Link href="/ingredients/recipes" className="ml-1 text-bark-700 hover:underline">
+                レシピを登録
+              </Link>
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {producibleList.slice(0, 6).map((p, i) => (
+                <li key={i} className="flex items-center justify-between text-sm">
+                  <span className="text-gray-700">{p.name}</span>
+                  <span className={`font-semibold ${p.count === 0 ? "text-red-500" : p.count <= 10 ? "text-yellow-600" : "text-green-600"}`}>
+                    {p.count} 個製造可能
                   </span>
                 </li>
               ))}
