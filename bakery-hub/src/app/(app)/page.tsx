@@ -171,24 +171,12 @@ export default async function DashboardPage() {
           </ol>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3">
           <Link
             href="/inventory"
             className="flex min-h-[88px] items-center justify-center rounded-2xl bg-bark-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-bark-700"
           >
             在庫を記録
-          </Link>
-          <Link
-            href="/reservations/new"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl bg-bark-600 px-4 py-5 text-center text-base font-semibold text-white hover:bg-bark-700"
-          >
-            新規予約
-          </Link>
-          <Link
-            href="/customers"
-            className="flex min-h-[88px] items-center justify-center rounded-2xl border border-bark-300 bg-white px-4 py-5 text-center text-base font-semibold text-bark-700 hover:bg-bark-50"
-          >
-            顧客を見る
           </Link>
           <Link
             href="/products"
@@ -199,10 +187,8 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="本日の予約数" value={todayReservationCount ?? 0} unit="件" />
+      <div className="grid grid-cols-2 gap-3">
         <Stat label="本日の売上" value={`¥${todaySales.toLocaleString()}`} />
-        <Stat label="登録顧客数" value={customerCount ?? 0} unit="人" />
         <Stat label="本日の在庫記録" value={logs?.length ?? 0} unit="品" />
       </div>
 
