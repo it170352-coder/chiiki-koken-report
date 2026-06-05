@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import type { Product } from "@/lib/types";
+import type { Product, Ingredient, RecipeItem } from "@/lib/types";
+import { getIngredientStatus } from "@/lib/types";
 
 const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
@@ -98,6 +99,46 @@ export default async function DashboardPage() {
     .from("customers")
     .select("id", { count: "exact", head: true });
 
+  // 原材料在庫アラート
+  const { data: ingredientsData } = await supabase
+    .from("ingredients")
+    .select("*");
+  const ingredientList = (ingredientsData ?? []) as Ingredient[];
+  const alertCount = ingredientList.filter(
+    (i) => getIngredientStatus(i) === "order",
+  ).length;
+  const cautionCount = ingredientList.filter(
+    (i) => getIngredientStatus(i) === "caution",
+  ).length;
+
+  // 製造可能数（レシピが登録されている商品）
+  const { data: recipeItemsData } = await supabase.from("recipe_items").select("*");
+  const recipeList = (recipeItemsData ?? []) as RecipeItem[];
+  const ingredientStockMap = new Map(ingredientList.map((i) => [i.id, i.stock_quantity]));
+
+  // 商品ごとにレシピをグループ化して製造可能数を計算
+  const recipeByProduct = new Map<string, RecipeItem[]>();
+  for (const ri of recipeList) {
+    const arr = recipeByProduct.get(ri.product_id) ?? [];
+    arr.push(ri);
+    recipeByProduct.set(ri.product_id, arr);
+  }
+  const producibleList: { name: string; count: number }[] = [];
+  for (const [productId, items] of recipeByProduct.entries()) {
+    if (items.length === 0) continue;
+    let min = Infinity;
+    for (const ri of items) {
+      if (ri.usage_quantity <= 0) continue;
+      const stock = ingredientStockMap.get(ri.ingredient_id) ?? 0;
+      const n = Math.floor(stock / ri.usage_quantity);
+      if (n < min) min = n;
+    }
+    const count = min === Infinity ? 0 : min;
+    const pName = priceMap.get(productId)?.name ?? "（不明な商品）";
+    producibleList.push({ name: pName, count });
+  }
+  producibleList.sort((a, b) => a.count - b.count);
+
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-bold text-bark-900">ダッシュボード</h1>
@@ -163,6 +204,65 @@ export default async function DashboardPage() {
         <Stat label="本日の売上" value={`¥${todaySales.toLocaleString()}`} />
         <Stat label="登録顧客数" value={customerCount ?? 0} unit="人" />
         <Stat label="本日の在庫記録" value={logs?.length ?? 0} unit="品" />
+      </div>
+
+      {/* 原材料カード */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Link
+          href="/ingredients"
+          className="block rounded-2xl border border-bark-100 bg-white p-5 hover:bg-bark-50"
+        >
+          <h2 className="mb-3 font-semibold text-gray-700">原材料 在庫アラート</h2>
+          {ingredientList.length === 0 ? (
+            <p className="text-sm text-gray-400">原材料が登録されていません。</p>
+          ) : alertCount === 0 && cautionCount === 0 ? (
+            <p className="text-sm text-green-600 font-medium">すべて正常です。</p>
+          ) : (
+            <div className="space-y-1">
+              {alertCount > 0 && (
+                <p className="text-sm font-semibold text-red-600">
+                  発注推奨: {alertCount} 件
+                </p>
+              )}
+              {cautionCount > 0 && (
+                <p className="text-sm font-semibold text-yellow-600">
+                  注意: {cautionCount} 件
+                </p>
+              )}
+            </div>
+          )}
+        </Link>
+
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
+          <h2 className="mb-3 font-semibold text-gray-700">製造可能数（レシピ登録済み商品）</h2>
+          {producibleList.length === 0 ? (
+            <p className="text-sm text-gray-400">
+              レシピが登録されていません。
+              <Link href="/ingredients/recipes" className="ml-1 text-bark-700 hover:underline">
+                レシピを登録
+              </Link>
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {producibleList.slice(0, 6).map((p, i) => (
+                <li key={i} className="flex items-center justify-between text-sm">
+                  <span className="text-gray-700">{p.name}</span>
+                  <span
+                    className={`font-semibold ${
+                      p.count === 0
+                        ? "text-red-500"
+                        : p.count <= 10
+                        ? "text-yellow-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {p.count} 個製造可能
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
