@@ -43,6 +43,11 @@ export type Product = {
   price: number;
   is_active: boolean;
   created_at: string;
+  // POSフェーズ1で追加
+  tax_rate: number;
+  stock_quantity: number;
+  stock_managed: boolean;
+  display_order: number;
 };
 
 export const PRODUCT_CATEGORIES = [
@@ -97,4 +102,39 @@ export const STATUS_COLORS: Record<ReservationStatus, string> = {
   ready: "bg-blue-100 text-blue-800",
   completed: "bg-green-100 text-green-800",
   cancelled: "bg-gray-100 text-gray-500",
+};
+
+// POSレジ関連型
+export type Sale = {
+  id: string;
+  store_id: string;
+  staff_id: string | null;
+  customer_id: string | null;
+  receipt_number: string;
+  subtotal: number;
+  tax_8_amount: number;
+  tax_10_amount: number;
+  total_amount: number;
+  payment_method: "cash" | "card" | "other";
+  cash_received: number | null;
+  change_amount: number | null;
+  status: "completed" | "voided";
+  sold_at: string;
+  created_at: string;
+};
+
+export type SaleItem = {
+  id: string;
+  sale_id: string;
+  product_id: string | null;
+  product_name: string;
+  unit_price: number;
+  tax_rate: number;
+  quantity: number;
+  subtotal: number;
+};
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
 };
