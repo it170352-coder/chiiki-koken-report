@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentStore } from "@/lib/store";
 import type { Product, Ingredient, RecipeItem } from "@/lib/types";
 import { upsertRecipeItem, deleteRecipeItem } from "./actions";
+import RecipeTemplateButton from "./RecipeTemplateButton";
 import Link from "next/link";
 
 // 商品ごとの製造可能数を計算する
@@ -87,11 +88,13 @@ export default async function RecipesPage() {
 
             return (
               <div key={product.id} className="rounded-2xl border border-bark-100 bg-white p-5">
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3 flex items-center justify-between gap-2">
                   <div>
                     <span className="font-semibold text-gray-800">{product.name}</span>
                     <span className="ml-2 text-xs text-gray-400">{product.category}</span>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <RecipeTemplateButton productId={product.id} />
                   {producible !== null && (
                     <span
                       className={`rounded-full px-3 py-0.5 text-sm font-semibold ${
@@ -105,6 +108,7 @@ export default async function RecipesPage() {
                       製造可能: {producible} 個
                     </span>
                   )}
+                  </div>
                 </div>
 
                 {/* 既存レシピ明細 */}
