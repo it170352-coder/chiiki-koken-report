@@ -12,6 +12,30 @@ function Stepper({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const [inputValue, setInputValue] = useState(String(value));
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
+  }
+
+  function handleBlur() {
+    const n = Math.max(0, parseInt(inputValue, 10) || 0);
+    setInputValue(String(n));
+    onChange(n);
+  }
+
+  function handleMinus() {
+    const n = Math.max(0, value - 1);
+    setInputValue(String(n));
+    onChange(n);
+  }
+
+  function handlePlus() {
+    const n = value + 1;
+    setInputValue(String(n));
+    onChange(n);
+  }
+
   return (
     <div className="flex flex-col items-center text-xs text-gray-400">
       {label}
@@ -19,7 +43,7 @@ function Stepper({
         <button
           type="button"
           aria-label={`${label}を1減らす`}
-          onClick={() => onChange(Math.max(0, value - 1))}
+          onClick={handleMinus}
           className="h-8 w-8 rounded-lg border border-gray-300 text-lg font-bold text-gray-500 hover:bg-gray-50"
         >
           −
@@ -27,14 +51,15 @@ function Stepper({
         <input
           type="number"
           min={0}
-          value={value}
-          onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
+          value={inputValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
           className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           type="button"
           aria-label={`${label}を1増やす`}
-          onClick={() => onChange(value + 1)}
+          onClick={handlePlus}
           className="h-8 w-8 rounded-lg border border-gray-300 text-lg font-bold text-gray-500 hover:bg-gray-50"
         >
           ＋
