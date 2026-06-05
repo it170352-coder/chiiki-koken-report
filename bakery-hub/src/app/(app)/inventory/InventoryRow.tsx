@@ -29,7 +29,7 @@ function Stepper({
           min={0}
           value={value}
           onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
-          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-amber-500 focus:outline-none"
+          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           type="button"
