@@ -58,6 +58,57 @@
 
 ---
 
+## Obsidian 連携ルール
+
+**Obsidian Vault**: `/Users/ishida/Desktop/Obsidian/Ishida Knowledge Vault/`
+
+### フォルダ構成
+
+| フォルダ | 用途 |
+|---------|------|
+| `02_Projects/` | プロジェクトごとの状況・残タスク |
+| `03_Sessions/` | セッション作業ログ（YYYY-MM-DD.md） |
+| `04_Decisions/` | 重要な方針決定の記録 |
+| `01_Knowledge/` | 再利用可能な技術知見 |
+| `08_Daily/` | 日報（既存） |
+| `Dashboard.md` | プロジェクト一覧とタイムライン |
+
+### 作業開始前の必須確認
+
+1. `Dashboard.md` を読み、プロジェクト一覧と最新タイムラインを確認する
+2. 作業対象があれば `02_Projects/<name>.md` を読む
+3. `03_Sessions/` の最新ファイルを確認する
+
+### 「ここまでで保存」時の処理
+
+1. `03_Sessions/YYYY-MM-DD.md` を作成（今日やったこと・完了タスク・次回引き継ぎ）
+2. 関連 `02_Projects/<name>.md` を更新
+3. `Dashboard.md` のタイムライン最上部に1行追記
+4. 再利用可能な知見があれば `01_Knowledge/` にファイル作成
+
+軽微な修正（ファイル2個以内・スキーマ/UI/認証に変更なし）は Dashboard.md への1行追記のみでよい。
+
+### 重要な方針変更時
+
+`04_Decisions/Decisions.md` に記録する（日付・決定内容・理由・影響範囲・ステータス）。
+
+---
+
+## 絶対優先ルール（実行前に必ず確認を取ること）
+
+| 操作カテゴリ | 具体例 |
+|------------|--------|
+| ファイル・ディレクトリの削除 | `rm -rf`、大量ファイル一括削除 |
+| DBスキーマ変更・マイグレーション | `prisma migrate`、本番テーブル削除 |
+| 本番デプロイ | `vercel --prod`、`git push origin main` |
+| 秘匿情報の操作 | `.env` の編集・表示・コミット |
+| 認証・権限の変更 | API キー更新、アクセス権限変更 |
+| 強制上書き | `git push --force`、`git reset --hard` |
+
+実行内容・影響範囲を1文で説明してから承諾を待つこと。
+
+---
+
 ## Bakery Hub SaaS（01_SaaS企画/、bakery-hub/）
 
 ### 現状（2026-06-04 時点）
