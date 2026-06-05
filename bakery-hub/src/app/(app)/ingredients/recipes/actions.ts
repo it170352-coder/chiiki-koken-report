@@ -42,6 +42,45 @@ export async function upsertRecipeItem(formData: FormData): Promise<void> {
   revalidatePath("/");
 }
 
+export type TemplateItem = { ingredientName: string; usageQuantity: number; unit: string };
+
+export async function applyRecipeTemplate(productId: string, items: TemplateItem[]) {
+  const { supabase, storeId } = await getCurrentStore();
+  if (!storeId) return { error: "認証エラー" };
+
+  // 原材料名からIDを引く
+  const names = items.map((i) => i.ingredientName);
+  const { data: ingredients } = await supabase
+    .from("ingredients")
+    .select("id, name")
+    .eq("store_id", storeId)
+    .in("name", names);
+
+  if (!ingredients || ingredients.length === 0) return { error: "原材料が登録されていません" };
+
+  const nameToId = new Map(ingredients.map((i: { id: string; name: string }) => [i.name, i.id]));
+
+  const rows = items
+    .filter((item) => nameToId.has(item.ingredientName))
+    .map((item) => ({
+      store_id: storeId,
+      product_id: productId,
+      ingredient_id: nameToId.get(item.ingredientName)!,
+      usage_quantity: item.usageQuantity,
+      unit: item.unit,
+    }));
+
+  if (rows.length === 0) return { error: "マッチする原材料が見つかりませんでした" };
+
+  await supabase
+    .from("recipe_items")
+    .upsert(rows, { onConflict: "store_id,product_id,ingredient_id", ignoreDuplicates: false });
+
+  revalidatePath("/ingredients/recipes");
+  revalidatePath("/");
+  return { error: null, added: rows.length };
+}
+
 export async function deleteRecipeItem(id: string) {
   const { supabase, storeId } = await getCurrentStore();
   if (!storeId) return;
