@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/products", label: "商品" },
   { href: "/inventory", label: "在庫" },
   { href: "/ingredients", label: "原材料" },
+  { href: "/visitors", label: "来客数" },
   { href: "/analytics", label: "分析" },
   { href: "/settings", label: "設定" },
 ];
