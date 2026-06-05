@@ -54,7 +54,7 @@ function Stepper({
           value={inputValue}
           onChange={handleChange}
           onBlur={handleBlur}
-          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm text-gray-900 focus:border-amber-500 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           type="button"
