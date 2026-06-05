@@ -11,17 +11,17 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* NOARIS風：ライトブラウン・ナチュラルパレット */
-  --color-bark-50: #faf8f5;
-  --color-bark-100: #f3ede4;
-  --color-bark-200: #e5d9cc;
-  --color-bark-300: #d0bfad;
-  --color-bark-400: #baa08a;
-  --color-bark-500: #a8876d;
-  --color-bark-600: #96735a;
-  --color-bark-700: #7d5f4a;
-  --color-bark-800: #5e4636;
-  --color-bark-900: #3b2b20;
+  /* wheat系ナチュラルパレット */
+  --color-bark-50: #fdfaf3;
+  --color-bark-100: #f9f0d9;
+  --color-bark-200: #f5deb3;
+  --color-bark-300: #edc97a;
+  --color-bark-400: #e0b24a;
+  --color-bark-500: #c99830;
+  --color-bark-600: #a97d22;
+  --color-bark-700: #8a631b;
+  --color-bark-800: #634818;
+  --color-bark-900: #3d2d10;
 }
 
 body {
