@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Product, InventoryLog } from "@/lib/types";
-import InventoryRow from "./InventoryRow";
+import InventoryBulkClient from "./InventoryBulkClient";
 
 function todayStr() {
   const now = new Date();
@@ -83,23 +83,20 @@ export default async function InventoryPage(
           商品が登録されていません。「商品」ページから登録してください。
         </p>
       ) : (
-        <div className="space-y-2">
-          {productList.map((p) => {
+        <InventoryBulkClient
+          date={date}
+          products={productList.map((p) => {
             const log = logMap.get(p.id);
-            return (
-              <InventoryRow
-                key={p.id}
-                productId={p.id}
-                productName={p.name}
-                date={date}
-                produced={log?.produced ?? 0}
-                sold={log?.sold ?? 0}
-                wasted={log?.wasted ?? 0}
-                prevProduced={prevProducedMap.get(p.id) ?? null}
-              />
-            );
+            return {
+              id: p.id,
+              name: p.name,
+              produced: log?.produced ?? 0,
+              sold: log?.sold ?? 0,
+              wasted: log?.wasted ?? 0,
+              prevProduced: prevProducedMap.get(p.id) ?? null,
+            };
           })}
-        </div>
+        />
       )}
     </div>
   );

@@ -77,6 +77,7 @@ export default function InventoryRow({
   sold,
   wasted,
   prevProduced,
+  onChangeExternal,
 }: {
   productId: string;
   productName: string;
@@ -85,6 +86,7 @@ export default function InventoryRow({
   sold: number;
   wasted: number;
   prevProduced: number | null;
+  onChangeExternal?: (field: "produced" | "sold" | "wasted", value: number) => void;
 }) {
   const [p, setP] = useState(produced);
   const [s, setS] = useState(sold);
@@ -117,26 +119,17 @@ export default function InventoryRow({
         <Stepper
           label="製造"
           value={p}
-          onChange={(v) => {
-            setP(v);
-            setSaved(false);
-          }}
+          onChange={(v) => { setP(v); setSaved(false); onChangeExternal?.("produced", v); }}
         />
         <Stepper
           label="販売"
           value={s}
-          onChange={(v) => {
-            setS(v);
-            setSaved(false);
-          }}
+          onChange={(v) => { setS(v); setSaved(false); onChangeExternal?.("sold", v); }}
         />
         <Stepper
           label="廃棄"
           value={w}
-          onChange={(v) => {
-            setW(v);
-            setSaved(false);
-          }}
+          onChange={(v) => { setW(v); setSaved(false); onChangeExternal?.("wasted", v); }}
         />
         <div className="flex flex-col items-center text-xs text-gray-400">
           残数
