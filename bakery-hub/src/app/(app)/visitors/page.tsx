@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentStore } from "@/lib/store";
 import VisitorsClient from "./VisitorsClient";
+import DatePicker from "./DatePicker";
 
 // 日本時間の今日の日付を YYYY-MM-DD 形式で返す
 function todayJST(): string {
@@ -37,20 +38,7 @@ export default async function VisitorsPage(props: PageProps<"/visitors">) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-bold text-bark-900">来客数</h1>
-        <form method="get" className="flex items-center gap-2">
-          <input
-            type="date"
-            name="date"
-            defaultValue={date}
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-bark-500 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="rounded-lg border border-bark-300 px-3 py-1.5 text-sm font-medium text-bark-700 hover:bg-bark-50"
-          >
-            表示
-          </button>
-        </form>
+        <DatePicker date={date} />
       </div>
       <VisitorsClient date={date} initialData={initialData} />
     </div>
