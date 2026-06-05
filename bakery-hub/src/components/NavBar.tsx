@@ -7,7 +7,6 @@ import { logout } from "@/app/login/actions";
 
 const LINKS = [
   { href: "/", label: "ダッシュボード" },
-  { href: "/pos", label: "POSレジ" },
   { href: "/reservations", label: "予約" },
   { href: "/customers", label: "顧客" },
   { href: "/products", label: "商品" },
