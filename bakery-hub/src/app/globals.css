@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf8f4;
+  --foreground: #1c1410;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* #f3cfa9ベースのナチュラルパレット */
+  --color-bark-50: #fdf8f2;
+  --color-bark-100: #faeddd;
+  --color-bark-200: #f3cfa9;
+  --color-bark-300: #eab87e;
+  --color-bark-400: #df9f58;
+  --color-bark-500: #cc8438;
+  --color-bark-600: #b06a28;
+  --color-bark-700: #8e5320;
+  --color-bark-800: #663c18;
+  --color-bark-900: #3d2410;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  button,
+  [role="button"],
+  a[href],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
+    transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, filter 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  button:not(:disabled):hover,
+  [role="button"]:hover,
+  a[href]:hover {
+    transform: translateY(-1px);
+  }
+
+  button:not(:disabled):active,
+  [role="button"]:active,
+  a[href]:active {
+    transform: translateY(1px) scale(0.98);
+    transition-duration: 0.06s;
+    filter: brightness(0.88);
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
