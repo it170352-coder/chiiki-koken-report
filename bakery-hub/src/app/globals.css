@@ -29,3 +29,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer base {
+  button,
+  [role="button"],
+  a[href],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
+    transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease, filter 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  button:not(:disabled):hover,
+  [role="button"]:hover,
+  a[href]:hover {
+    transform: translateY(-1px);
+  }
+
+  button:not(:disabled):active,
+  [role="button"]:active,
+  a[href]:active {
+    transform: translateY(1px) scale(0.98);
+    transition-duration: 0.06s;
+    filter: brightness(0.88);
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}

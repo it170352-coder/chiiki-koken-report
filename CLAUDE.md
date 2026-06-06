@@ -111,27 +111,36 @@
 
 ## Bakery Hub SaaS（01_SaaS企画/、bakery-hub/）
 
-### 現状（2026-06-04 時点）
+### 現状（2026-06-06 時点）
 
-- ステータス: 本番デプロイ済み・スタッフ管理機能実装済み（実画面確認は次回）
+- ステータス: 本番デプロイ済み・原材料管理・来客数管理・barkカラーパレット刷新まで完了
 - 本番URL: https://bakery-hub-ten.vercel.app（稼働中）
-- アプリ本体: bakery-hub/（Next.js 16 + React 19 + TypeScript + Tailwind + Supabase）
+- アプリ本体: bakery-hub/（Next.js 16 + React 19 + TypeScript + Tailwind v4 + Supabase）
 - Supabase URL: https://qmmnrxbekvmopdpxdrji.supabase.co
 - 認証: Confirm email を現在無効化中。本番移行時はカスタムSMTP設定後に再有効化すること
 - 環境変数: SUPABASE_SERVICE_ROLE_KEY を Vercel に登録済み（NEXT_PUBLIC_ なし）
 
-### 今セッションで実装・デプロイしたもの（コミット 6c7ef4f）
+### 直近セッション（2026-06-05〜06-06）で実装したもの
 
-- カレンダー定休日の赤色表示
-- 予約ページの合計金額表示を大きく中央配置
-- 顧客一覧タップ不具合修正（SwipeToDelete.tsx の pointerCapture 方式変更）
-- スタッフ管理機能（設定画面・オーナー専用）新規追加
+- UIデザイン刷新: amber → bark カスタムパレット（bark-200=#f3cfa9、背景#faf8f4）
+- 原材料管理機能（/ingredients）: カテゴリ別一覧・在庫Stepper・ステータスバッジ
+- レシピ管理（/ingredients/recipes）: 製造可能数計算
+- 来客数管理（/visitors）: 6〜21時1時間ごと入力・棒グラフ・日付選択
+- ダッシュボード整理: 予約/顧客カード削除・在庫アラートを下部に移動
+- 利益分析プレビュー（/analytics/profit-preview）: モックアップ作成（本実装は次回）
+- POSレジ（フェーズ1実装後に削除）
+- Supabaseマイグレーション適用: 001_pos_phase1 / 002_ingredients / 003_hourly_visitors
+
+### NavBar 現在の構成
+
+ダッシュボード / 予約 / 顧客 / 商品 / 在庫 / 原材料 / 来客数 / 分析 / 設定
 
 ### 次回やるべきこと
 
-1. スタッフ管理機能の実画面確認（石田さん本人がオーナーでログインして確認）
-2. カスタムSMTP設定 + Confirm email 再有効化
-3. 営業スライド（Bakery_Hub_営業提案資料.pptx）のファクトチェック
+1. /analytics/profit-preview を本実装に昇格（原価・利益分析ページ）
+2. スタッフ管理機能の実画面確認（石田さん本人がオーナーでログインして確認）
+3. カスタムSMTP設定 + Confirm email 再有効化
+4. 営業スライド（Bakery_Hub_営業提案資料.pptx）のファクトチェック
 
 ### 触ってほしくないファイル（追加）
 
