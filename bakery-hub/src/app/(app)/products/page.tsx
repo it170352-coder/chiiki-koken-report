@@ -8,6 +8,7 @@ import ProductRow from "./ProductRow";
 import IngredientRow from "../ingredients/IngredientRow";
 import InventoryBulkClient from "../inventory/InventoryBulkClient";
 import CsvImportButton from "./CsvImportButton";
+import CsvDownloadButton from "@/components/CsvDownloadButton";
 import Link from "next/link";
 
 function todayStr() {
@@ -100,7 +101,13 @@ export default async function ProductsPage(props: PageProps<"/products">) {
       {/* 商品タブ */}
       {tab === "products" && (
         <>
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <CsvDownloadButton
+              filename="商品一覧.csv"
+              label="CSVエクスポート"
+              headers={["商品名", "カテゴリ", "価格", "状態"]}
+              rows={productList.map((p) => [p.name, p.category ?? "", p.price, p.is_active ? "販売中" : "停止中"])}
+            />
             <CsvImportButton type="products" />
           </div>
           <form
@@ -150,6 +157,12 @@ export default async function ProductsPage(props: PageProps<"/products">) {
               <span className="font-semibold text-bark-700">{totalWasted} 個</span>
             </p>
             <div className="flex flex-wrap items-center gap-2">
+              <CsvDownloadButton
+                filename={`在庫_${date}.csv`}
+                label="CSVエクスポート"
+                headers={["商品名", "製造数", "販売数", "廃棄数"]}
+                rows={inventoryRows.map((r) => [r.name, r.produced, r.sold, r.wasted])}
+              />
               <CsvImportButton type="inventory" date={date} />
               <form method="get" className="flex items-center gap-2">
               <input type="hidden" name="tab" value="inventory" />
@@ -176,6 +189,12 @@ export default async function ProductsPage(props: PageProps<"/products">) {
             <Link href="/ingredients/recipes" className="rounded-lg border border-bark-300 px-3 py-2 text-sm font-medium text-bark-700 hover:bg-bark-50">
               レシピ管理
             </Link>
+            <CsvDownloadButton
+              filename="原材料一覧.csv"
+              label="CSVエクスポート"
+              headers={["カテゴリ", "名前", "単位", "最低在庫", "仕入単価", "仕入先"]}
+              rows={[...ingredientGroups.values()].flat().map((i) => [i.category, i.name, i.unit, i.minimum_stock, i.purchase_price, i.supplier ?? ""])}
+            />
             <CsvImportButton type="ingredients" />
           </div>
 
