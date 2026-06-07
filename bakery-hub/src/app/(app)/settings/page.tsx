@@ -3,6 +3,7 @@ import StoreSettingsForm from "./StoreSettingsForm";
 import PasswordForm from "./PasswordForm";
 import ShopLink from "./ShopLink";
 import StaffManager from "./StaffManager";
+import StaffList from "../staff/StaffList";
 import { getStaffList } from "./staffActions";
 import { STORE_ROLE_LABELS } from "@/lib/types";
 
@@ -14,7 +15,7 @@ export default async function SettingsPage() {
 
   const { data: store } = await supabase
     .from("stores")
-    .select("name, pickup_start, pickup_end, closed_days, closed_dates")
+    .select("name, pickup_start, pickup_end, closed_days, closed_dates, customer_mode")
     .eq("id", storeId ?? "")
     .maybeSingle();
 
@@ -46,6 +47,7 @@ export default async function SettingsPage() {
             pickupEnd={(store?.pickup_end ?? "").slice(0, 5)}
             closedDays={closedDays}
             closedDates={closedDates}
+            customerMode={store?.customer_mode ?? "individual"}
           />
         </section>
       ) : (
@@ -69,7 +71,17 @@ export default async function SettingsPage() {
 
       {canStaff && (
         <section className="rounded-2xl border border-bark-100 bg-white p-5">
-          <h2 className="mb-1 font-semibold text-gray-700">スタッフ管理</h2>
+          <h2 className="mb-1 font-semibold text-gray-700">スタッフ一覧</h2>
+          <p className="mb-4 text-xs text-gray-400">
+            登録中のスタッフを確認・編集できます。
+          </p>
+          <StaffList members={staff.members} />
+        </section>
+      )}
+
+      {canStaff && (
+        <section className="rounded-2xl border border-bark-100 bg-white p-5">
+          <h2 className="mb-1 font-semibold text-gray-700">スタッフアカウント管理</h2>
           <p className="mb-4 text-xs text-gray-400">
             お店で働くスタッフのログインアカウントを追加・削除できます（オーナーのみ）。
           </p>

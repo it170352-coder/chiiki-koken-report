@@ -15,13 +15,13 @@ export default async function AppLayout({
 
   const { data: store } = await supabase
     .from("stores")
-    .select("name")
+    .select("name, customer_mode")
     .eq("id", storeId ?? "")
     .maybeSingle();
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <NavBar storeName={store?.name ?? ""} />
+      <NavBar storeName={store?.name ?? ""} customerMode={store?.customer_mode ?? "individual"} />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
     </div>
   );

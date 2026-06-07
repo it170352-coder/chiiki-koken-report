@@ -35,7 +35,7 @@ export default function ShopLink({ storeId }: { storeId: string }) {
           onClick={copy}
           className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700"
         >
-          {copied ? "コピーしました" : "コピー"}
+          {copied ? "コピー完了" : "コピー"}
         </button>
       </div>
       <a

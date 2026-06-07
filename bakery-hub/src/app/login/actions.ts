@@ -25,7 +25,7 @@ export async function signup(formData: FormData): Promise<{ error: string } | vo
   const storeName = String(formData.get("store_name") ?? "");
 
   if (password.length < 6) {
-    return { error: "パスワードは6文字以上で入力してください。" };
+    return { error: "パスワードは6文字以上にしてください" };
   }
 
   const supabase = await createClient();

@@ -91,7 +91,7 @@ export default function InventoryRow({
   const [p, setP] = useState(produced);
   const [s, setS] = useState(sold);
   const [w, setW] = useState(wasted);
-  const [saved, setSaved] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [pending, startTransition] = useTransition();
 
   const remaining = p - s - w;
@@ -103,10 +103,9 @@ export default function InventoryRow({
     fd.set("produced", String(p));
     fd.set("sold", String(s));
     fd.set("wasted", String(w));
-    setSaved(false);
     startTransition(async () => {
       await saveInventoryLog(fd);
-      setSaved(true);
+      setSavedAt(new Date());
     });
   }
 
@@ -119,17 +118,17 @@ export default function InventoryRow({
         <Stepper
           label="製造"
           value={p}
-          onChange={(v) => { setP(v); setSaved(false); onChangeExternal?.("produced", v); }}
+          onChange={(v) => { setP(v); onChangeExternal?.("produced", v); }}
         />
         <Stepper
           label="販売"
           value={s}
-          onChange={(v) => { setS(v); setSaved(false); onChangeExternal?.("sold", v); }}
+          onChange={(v) => { setS(v); onChangeExternal?.("sold", v); }}
         />
         <Stepper
           label="廃棄"
           value={w}
-          onChange={(v) => { setW(v); setSaved(false); onChangeExternal?.("wasted", v); }}
+          onChange={(v) => { setW(v); onChangeExternal?.("wasted", v); }}
         />
         <div className="flex flex-col items-center text-xs text-gray-400">
           残数
@@ -141,20 +140,26 @@ export default function InventoryRow({
             {remaining}
           </span>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={pending}
-          className="self-center rounded-lg bg-bark-600 px-3 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
-        >
-          {pending ? "保存中" : saved ? "保存済" : "保存"}
-        </button>
+        <div className="flex flex-col items-center gap-1">
+          <button
+            onClick={handleSave}
+            disabled={pending}
+            className="self-center rounded-lg bg-bark-600 px-3 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
+          >
+            {pending ? "保存しています" : "保存"}
+          </button>
+          {savedAt && (
+            <span className="text-xs text-gray-400">
+              {savedAt.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+        </div>
       </div>
       {prevProduced !== null && prevProduced !== p && (
         <button
           type="button"
           onClick={() => {
             setP(prevProduced);
-            setSaved(false);
           }}
           className="mt-2 text-xs text-bark-700 hover:underline"
         >

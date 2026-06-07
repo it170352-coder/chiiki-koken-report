@@ -40,7 +40,7 @@ export default function MemoEditor({
           disabled={pending}
           className="rounded-lg bg-bark-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
-          {pending ? "保存中..." : "メモを保存"}
+          {pending ? "保存しています" : "メモを保存"}
         </button>
         {saved && <span className="text-sm text-green-600">保存しました</span>}
       </div>

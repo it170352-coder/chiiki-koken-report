@@ -121,7 +121,7 @@ export default async function IngredientsPage() {
       {/* 一覧 */}
       {groups.size === 0 ? (
         <div className="rounded-2xl border border-bark-100 bg-white p-6 text-center text-sm text-gray-400">
-          原材料が登録されていません。上のフォームから追加してください。
+          まだ登録されていません上のフォームから追加してください。
         </div>
       ) : (
         <div className="space-y-6">

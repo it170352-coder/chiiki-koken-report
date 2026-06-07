@@ -40,7 +40,7 @@ export default async function NewReservationPage() {
       return `${Number(m)}/${Number(day)}`;
     });
   const pickupHint =
-    pickupStart && pickupEnd ? `受取時間の目安：${pickupStart}〜${pickupEnd}` : "";
+    pickupStart && pickupEnd ? `納品日時の目安：${pickupStart}〜${pickupEnd}` : "";
   const closedHint = closedLabels.length ? `定休日：${closedLabels.join("・")}曜` : "";
   const closedDatesHint = upcomingClosedDates.length
     ? `臨時休業：${upcomingClosedDates.join("・")}`
@@ -58,10 +58,10 @@ export default async function NewReservationPage() {
         href="/reservations"
         className="text-sm text-bark-700 hover:underline"
       >
-        ‹ 予約一覧に戻る
+        ‹ 注文一覧に戻る
       </Link>
 
-      <h1 className="text-xl font-bold text-bark-900">新規予約の登録</h1>
+      <h1 className="text-xl font-bold text-bark-900">新規注文の登録</h1>
 
       <form
         action={createReservation}
@@ -69,13 +69,13 @@ export default async function NewReservationPage() {
       >
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            お客様
+            取引先
           </label>
           <select
             name="customer_id"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
           >
-            <option value="">（顧客を指定しない）</option>
+            <option value="">（取引先を指定しない）</option>
             {customerList.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -86,7 +86,7 @@ export default async function NewReservationPage() {
 
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            受取日時 <span className="text-red-500">*</span>
+            納品日時 <span className="text-red-500">*</span>
           </label>
           <input
             type="datetime-local"
@@ -140,7 +140,7 @@ export default async function NewReservationPage() {
           <textarea
             name="memo"
             rows={2}
-            placeholder="例：のし希望、アレルギー対応など"
+            placeholder="例：のし希望、配送先指定など"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
           />
         </div>
@@ -149,7 +149,7 @@ export default async function NewReservationPage() {
           type="submit"
           className="rounded-lg bg-bark-600 px-5 py-2 text-sm font-semibold text-white hover:bg-bark-700"
         >
-          予約を登録する
+          注文を登録する
         </button>
       </form>
     </div>

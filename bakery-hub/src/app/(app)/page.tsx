@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Product, Ingredient, RecipeItem } from "@/lib/types";
 import { getIngredientStatus } from "@/lib/types";
+import DashboardVisitorsChart from "./DashboardVisitorsChart";
 
 const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
@@ -122,8 +123,9 @@ export default async function DashboardPage() {
 
   const { data: visitorsData } = await supabase
     .from("hourly_visitors")
-    .select("visitor_count")
-    .eq("date", today);
+    .select("hour, visitor_count")
+    .eq("date", today)
+    .order("hour", { ascending: true });
   const todayVisitors = (visitorsData ?? []).reduce(
     (sum, r) => sum + ((r.visitor_count as number) ?? 0),
     0,
@@ -267,7 +269,7 @@ export default async function DashboardPage() {
             <span className="text-xs text-gray-400">本日</span>
           </div>
           {ranking.length === 0 ? (
-            <p className="text-sm text-gray-400">本日の販売データがありません。</p>
+            <p className="text-sm text-gray-400">今日の売上はまだゼロです</p>
           ) : (
             <ol className="space-y-3">
               {ranking.map((r, i) => {
@@ -307,7 +309,7 @@ export default async function DashboardPage() {
           </div>
           {stock.length === 0 ? (
             <p className="text-sm text-gray-400">
-              本日の在庫記録がありません。
+              今日の記録はまだありません
             </p>
           ) : (
             <ul className="space-y-2.5">
@@ -332,6 +334,9 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      {/* 来客数グラフ */}
+      <DashboardVisitorsChart data={(visitorsData ?? []).map((r) => ({ hour: r.hour as number, count: (r.visitor_count as number) ?? 0 }))} />
+
       {/* 2カラム: 原材料アラート + 製造可能数 */}
       <div className="grid gap-4 md:grid-cols-2">
         {/* 原材料アラート詳細 */}
@@ -344,7 +349,7 @@ export default async function DashboardPage() {
             <span className="text-xs font-medium text-bark-600">詳細を見る →</span>
           </div>
           {ingredientList.length === 0 ? (
-            <p className="text-sm text-gray-400">原材料が登録されていません。</p>
+            <p className="text-sm text-gray-400">まだ登録されていません</p>
           ) : alertIngredients.length === 0 && cautionIngredients.length === 0 ? (
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-base">✓</span>
@@ -408,24 +413,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* クイックリンク（MarketMan スタイル） */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {[
-          { label: "商品管理", href: "/products", icon: "🍞" },
-          { label: "来客数入力", href: "/visitors", icon: "📊" },
-          { label: "原材料管理", href: "/ingredients", icon: "🌾" },
-          { label: "分析", href: "/analytics", icon: "📈" },
-        ].map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center gap-3 rounded-xl border border-bark-100 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:border-bark-300 hover:bg-bark-50"
-          >
-            <span className="text-base">{item.icon}</span>
-            {item.label}
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

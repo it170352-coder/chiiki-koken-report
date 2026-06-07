@@ -15,7 +15,7 @@ export default function StaffManager({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState<StoreRole>("staff");
+  const [role, setRole] = useState<StoreRole>("parttime");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -35,11 +35,11 @@ export default function StaffManager({
     e.preventDefault();
     setMsg(null);
     if (!email.trim() || !password) {
-      setMsg({ ok: false, text: "メールアドレスとパスワードを入力してください。" });
+      setMsg({ ok: false, text: "メールアドレスとパスワードを入力してください" });
       return;
     }
     if (password.length < 6) {
-      setMsg({ ok: false, text: "パスワードは6文字以上にしてください。" });
+      setMsg({ ok: false, text: "パスワードは6文字以上にしてください" });
       return;
     }
     const fd = new FormData();
@@ -55,13 +55,13 @@ export default function StaffManager({
       }
       setMembers((prev) => [
         ...prev,
-        { userId: `tmp-${Date.now()}`, email: email.trim(), role },
+        { userId: `tmp-${Date.now()}`, email: email.trim(), name: name.trim(), role },
       ]);
       setEmail("");
       setPassword("");
       setName("");
-      setRole("staff");
-      setMsg({ ok: true, text: "スタッフを追加しました。" });
+      setRole("parttime");
+      setMsg({ ok: true, text: "追加しました" });
     });
   }
 
@@ -75,7 +75,7 @@ export default function StaffManager({
         return;
       }
       setMembers((prev) => prev.filter((x) => x.userId !== m.userId));
-      setMsg({ ok: true, text: "スタッフを削除しました。" });
+      setMsg({ ok: true, text: "削除しました" });
     });
   }
 
@@ -83,7 +83,7 @@ export default function StaffManager({
     <div className="space-y-5">
       <div className="space-y-2">
         {members.length === 0 ? (
-          <p className="text-sm text-gray-400">まだスタッフがいません。</p>
+          <p className="text-sm text-gray-400">スタッフを追加してみましょう</p>
         ) : (
           members.map((m) => (
             <div
@@ -153,8 +153,10 @@ export default function StaffManager({
             onChange={(e) => setRole(e.target.value as StoreRole)}
             className={inputCls}
           >
-            <option value="staff">スタッフ</option>
+            <option value="owner">オーナー</option>
             <option value="manager">店長</option>
+            <option value="employee">社員</option>
+            <option value="parttime">アルバイト</option>
           </select>
         </div>
         {msg && (
@@ -167,7 +169,7 @@ export default function StaffManager({
           disabled={pending}
           className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
-          {pending ? "処理中…" : "スタッフを追加"}
+          {pending ? "処理しています" : "スタッフを追加"}
         </button>
       </form>
     </div>

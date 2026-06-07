@@ -23,23 +23,21 @@ export default function InventoryBulkClient({
   const [values, setValues] = useState<Record<string, { produced: number; sold: number; wasted: number }>>(
     Object.fromEntries(products.map((p) => [p.id, { produced: p.produced, sold: p.sold, wasted: p.wasted }]))
   );
-  const [saved, setSaved] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [pending, startTransition] = useTransition();
 
   function handleChange(productId: string, field: "produced" | "sold" | "wasted", value: number) {
-    setSaved(false);
     setValues((prev) => ({ ...prev, [productId]: { ...prev[productId], [field]: value } }));
   }
 
   function handleSaveAll() {
-    setSaved(false);
     const items = products.map((p) => ({
       productId: p.id,
       ...values[p.id],
     }));
     startTransition(async () => {
       const result = await saveAllInventoryLogs(date, items);
-      if (!result?.error) setSaved(true);
+      if (!result?.error) setSavedAt(new Date());
     });
   }
 
@@ -62,13 +60,17 @@ export default function InventoryBulkClient({
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-2">
-        {saved && <span className="text-sm text-green-600 font-medium">すべて保存しました</span>}
+        {savedAt && (
+          <span className="text-sm text-gray-400">
+            最終更新: {savedAt.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+          </span>
+        )}
         <button
           onClick={handleSaveAll}
           disabled={pending}
           className="rounded-lg bg-bark-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
         >
-          {pending ? "保存中..." : "一括保存"}
+          {pending ? "保存しています" : "一括保存"}
         </button>
       </div>
     </div>

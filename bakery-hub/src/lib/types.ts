@@ -1,10 +1,13 @@
-export type StoreRole = "owner" | "manager" | "staff";
+export type StoreRole = "owner" | "manager" | "employee" | "parttime";
 
 export const STORE_ROLE_LABELS: Record<StoreRole, string> = {
   owner: "オーナー",
   manager: "店長",
-  staff: "スタッフ",
+  employee: "社員",
+  parttime: "アルバイト",
 };
+
+export type CustomerMode = "individual" | "corporate";
 
 export type Store = {
   id: string;
@@ -13,6 +16,7 @@ export type Store = {
   pickup_end: string | null;
   closed_days: string;
   closed_dates: string;
+  customer_mode: CustomerMode;
   created_at: string;
 };
 
@@ -23,11 +27,16 @@ export type StoreMember = {
   created_at: string;
 };
 
+export type CustomerType = "individual" | "corporate";
+
 export type Customer = {
   id: string;
   store_id: string;
   user_id: string;
   name: string;
+  customer_type: CustomerType;
+  contact_person: string | null;
+  department: string | null;
   phone: string | null;
   email: string | null;
   memo: string | null;
@@ -94,6 +103,13 @@ export const STATUS_LABELS: Record<ReservationStatus, string> = {
   pending: "予約受付",
   ready: "準備完了",
   completed: "受取済",
+  cancelled: "キャンセル",
+};
+
+export const STATUS_LABELS_CORPORATE: Record<ReservationStatus, string> = {
+  pending: "注文受付",
+  ready: "準備完了",
+  completed: "納品済",
   cancelled: "キャンセル",
 };
 
