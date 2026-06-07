@@ -81,36 +81,6 @@ export default function StaffManager({
 
   return (
     <div className="space-y-5">
-      <div className="space-y-2">
-        {members.length === 0 ? (
-          <p className="text-sm text-gray-400">スタッフを追加してみましょう</p>
-        ) : (
-          members.map((m) => (
-            <div
-              key={m.userId}
-              className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2"
-            >
-              <div className="min-w-0">
-                <p className="truncate text-sm text-gray-700">{m.email}</p>
-                <p className="text-xs text-gray-400">{STORE_ROLE_LABELS[m.role]}</p>
-              </div>
-              {m.role === "owner" ? (
-                <span className="text-xs text-gray-400">削除不可</span>
-              ) : (
-                <button
-                  type="button"
-                  disabled={pending}
-                  onClick={() => handleRemove(m)}
-                  className="rounded-lg border border-red-200 px-3 py-1 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
-                >
-                  削除
-                </button>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-
       <form onSubmit={handleAdd} className="space-y-3 border-t border-gray-100 pt-4">
         <p className="text-sm font-medium text-gray-700">スタッフを追加</p>
         <div>
