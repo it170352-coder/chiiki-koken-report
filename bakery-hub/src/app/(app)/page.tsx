@@ -249,14 +249,6 @@ export default async function DashboardPage() {
           accent="blue"
         />
         <KpiCard
-          label="本日の予約"
-          value={todayReservationCount ?? 0}
-          unit="件"
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><rect x="3" y="4" width="18" height="18" rx="2"/><path strokeLinecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>}
-          href="/reservations"
-          accent="bark"
-        />
-        <KpiCard
           label="本日の廃棄数"
           value={todayWasted}
           unit="個"
