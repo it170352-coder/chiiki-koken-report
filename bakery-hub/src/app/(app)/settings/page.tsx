@@ -70,21 +70,14 @@ export default async function SettingsPage() {
       )}
 
       {canStaff && (
-        <section className="rounded-2xl border border-bark-100 bg-white p-5">
-          <h2 className="mb-1 font-semibold text-gray-700">スタッフ一覧</h2>
-          <p className="mb-4 text-xs text-gray-400">
-            登録中のスタッフを確認・編集できます。
-          </p>
-          <StaffList members={staff.members} />
-        </section>
-      )}
-
-      {canStaff && (
-        <section className="rounded-2xl border border-bark-100 bg-white p-5">
-          <h2 className="mb-1 font-semibold text-gray-700">スタッフアカウント管理</h2>
-          <p className="mb-4 text-xs text-gray-400">
-            お店で働くスタッフのログインアカウントを追加・削除できます（オーナーのみ）。
-          </p>
+        <section className="rounded-2xl border border-bark-100 bg-white p-5 space-y-6">
+          <div>
+            <h2 className="mb-1 font-semibold text-gray-700">スタッフ管理</h2>
+            <p className="mb-4 text-xs text-gray-400">
+              登録中のスタッフを確認・編集できます。アカウントの追加・削除はオーナーのみ可能です。
+            </p>
+            <StaffList members={staff.members} />
+          </div>
           <StaffManager
             initialMembers={staff.members}
             available={staff.available}
