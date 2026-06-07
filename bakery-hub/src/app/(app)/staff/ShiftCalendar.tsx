@@ -77,7 +77,7 @@ function ShiftForm({ staffMembers, date, existing, onClose }: ShiftFormProps) {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="mb-1 block text-xs text-gray-500">開始時刻</label>
               <input
@@ -85,7 +85,7 @@ function ShiftForm({ staffMembers, date, existing, onClose }: ShiftFormProps) {
                 name="start_time"
                 defaultValue={existing?.start_time?.slice(0, 5) ?? "09:00"}
                 required
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-bark-500 focus:outline-none"
               />
             </div>
             <div>
@@ -95,7 +95,7 @@ function ShiftForm({ staffMembers, date, existing, onClose }: ShiftFormProps) {
                 name="end_time"
                 defaultValue={existing?.end_time?.slice(0, 5) ?? "17:00"}
                 required
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-bark-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-bark-500 focus:outline-none"
               />
             </div>
           </div>
