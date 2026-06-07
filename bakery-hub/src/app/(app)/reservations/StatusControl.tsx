@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import type { ReservationStatus } from "@/lib/types";
-import { STATUS_LABELS, STATUS_COLORS } from "@/lib/types";
+import { STATUS_LABELS, STATUS_LABELS_CORPORATE, STATUS_COLORS } from "@/lib/types";
 import { updateReservationStatus } from "./actions";
 
 const ORDER: ReservationStatus[] = ["pending", "ready", "completed", "cancelled"];
@@ -10,10 +10,13 @@ const ORDER: ReservationStatus[] = ["pending", "ready", "completed", "cancelled"
 export default function StatusControl({
   id,
   status,
+  isCorporate,
 }: {
   id: string;
   status: ReservationStatus;
+  isCorporate?: boolean;
 }) {
+  const labels = isCorporate ? STATUS_LABELS_CORPORATE : STATUS_LABELS;
   const [pending, startTransition] = useTransition();
 
   return (
@@ -29,7 +32,7 @@ export default function StatusControl({
     >
       {ORDER.map((s) => (
         <option key={s} value={s}>
-          {STATUS_LABELS[s]}
+          {labels[s]}
         </option>
       ))}
     </select>

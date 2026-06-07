@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentStore } from "@/lib/store";
 import type { Customer, ReservationStatus } from "@/lib/types";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/types";
 import MemoEditor from "./MemoEditor";
@@ -16,6 +17,10 @@ export default async function CustomerDetailPage(
   props: PageProps<"/customers/[id]">,
 ) {
   const { id } = await props.params;
+  const { supabase: storeSupabase, storeId } = await getCurrentStore();
+  const { data: store } = await storeSupabase.from("stores").select("customer_mode").eq("id", storeId ?? "").maybeSingle();
+  const storeCorporate = store?.customer_mode === "corporate"; // ストア全体設定（未使用だが参照用）
+
   const supabase = await createClient();
 
   const { data: customer } = await supabase
@@ -26,6 +31,7 @@ export default async function CustomerDetailPage(
 
   if (!customer) notFound();
   const c = customer as Customer;
+  const isCorporate = c.customer_type === "corporate";
 
   const { data: reservations } = await supabase
     .from("reservations")
@@ -47,6 +53,12 @@ export default async function CustomerDetailPage(
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h1 className="text-xl font-bold text-bark-900">{c.name}</h1>
         <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+          {isCorporate && c.contact_person && (
+            <div>
+              <dt className="text-gray-400">担当者</dt>
+              <dd className="text-gray-700">{c.contact_person}{c.department ? `（${c.department}）` : ""}</dd>
+            </div>
+          )}
           <div>
             <dt className="text-gray-400">電話番号</dt>
             <dd className="text-gray-700">{c.phone || "—"}</dd>
@@ -56,21 +68,23 @@ export default async function CustomerDetailPage(
             <dd className="text-gray-700">{c.email || "—"}</dd>
           </div>
           <div>
-            <dt className="text-gray-400">受取完了回数</dt>
+            <dt className="text-gray-400">{isCorporate ? "納品済み回数" : "受取完了回数"}</dt>
             <dd className="text-gray-700">{visitCount} 回</dd>
           </div>
         </dl>
       </div>
 
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
-        <h2 className="mb-3 font-semibold text-gray-700">メモ（好み・アレルギー等）</h2>
+        <h2 className="mb-3 font-semibold text-gray-700">
+          {isCorporate ? "備考（定番注文・配送先など）" : "メモ（好み・アレルギー等）"}
+        </h2>
         <MemoEditor customerId={c.id} initialMemo={c.memo ?? ""} />
       </div>
 
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-3 font-semibold text-gray-700">予約・購入履歴</h2>
         {history.length === 0 ? (
-          <p className="text-sm text-gray-400">予約履歴はまだありません。</p>
+          <p className="text-sm text-gray-400">予約履歴はゼロ件です</p>
         ) : (
           <ul className="space-y-3">
             {history.map((r) => (

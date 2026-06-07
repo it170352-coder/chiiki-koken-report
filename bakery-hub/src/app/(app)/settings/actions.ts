@@ -34,6 +34,9 @@ export async function updateStoreSettings(
     return { error: "受取の終了時間は開始時間より後にしてください。" };
   }
 
+  const customerMode = String(formData.get("customer_mode") ?? "individual");
+  const validMode = customerMode === "corporate" ? "corporate" : "individual";
+
   const { error } = await supabase
     .from("stores")
     .update({
@@ -41,10 +44,11 @@ export async function updateStoreSettings(
       pickup_end: pickupEnd,
       closed_days: closedDays,
       closed_dates: closedDates,
+      customer_mode: validMode,
     })
     .eq("id", storeId);
 
-  if (error) return { error: "保存に失敗しました。時間をおいて再度お試しください。" };
+  if (error) return { error: "保存できませんでした。時間をおいて再度お試しください。" };
 
   revalidatePath("/", "layout");
   revalidatePath("/settings");

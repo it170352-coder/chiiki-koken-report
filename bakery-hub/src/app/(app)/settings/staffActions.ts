@@ -8,6 +8,7 @@ import type { StoreRole } from "@/lib/types";
 export type StaffMember = {
   userId: string;
   email: string;
+  name: string;
   role: StoreRole;
 };
 
@@ -33,12 +34,16 @@ export async function getStaffList(): Promise<{
     .eq("store_id", storeId);
 
   const { data: list } = await admin.auth.admin.listUsers();
-  const emailMap = new Map<string, string>();
-  list?.users.forEach((u) => emailMap.set(u.id, u.email ?? ""));
+  const userMap = new Map<string, { email: string; name: string }>();
+  list?.users.forEach((u) => userMap.set(u.id, {
+    email: u.email ?? "",
+    name: (u.user_metadata?.store_name as string) ?? "",
+  }));
 
   const members: StaffMember[] = (rows ?? []).map((r) => ({
     userId: r.user_id as string,
-    email: emailMap.get(r.user_id as string) ?? "（不明）",
+    email: userMap.get(r.user_id as string)?.email ?? "（不明）",
+    name: userMap.get(r.user_id as string)?.name ?? "",
     role: r.role as StoreRole,
   }));
   // owner を先頭に
@@ -62,12 +67,12 @@ export async function createStaff(
   const newRole = String(formData.get("role") ?? "staff");
 
   if (!email || !password) {
-    return { error: "メールアドレスとパスワードを入力してください。" };
+    return { error: "メールアドレスとパスワードを入力してください" };
   }
   if (password.length < 6) {
-    return { error: "パスワードは6文字以上にしてください。" };
+    return { error: "パスワードは6文字以上にしてください" };
   }
-  if (newRole !== "manager" && newRole !== "staff") {
+  if (!["owner", "manager", "employee", "parttime"].includes(newRole)) {
     return { error: "権限の指定が正しくありません。" };
   }
 
@@ -101,6 +106,42 @@ export async function createStaff(
     return { error: "スタッフの作成に失敗しました。時間をおいてお試しください。" };
   }
 
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function updateStaff(
+  formData: FormData,
+): Promise<{ error: string } | { ok: true }> {
+  const { storeId, role } = await getCurrentStore();
+  if (!storeId) return { error: "ログインが必要です。" };
+  if (!canManageMembers(role)) return { error: "オーナーのみ編集できます。" };
+
+  const userId = String(formData.get("userId"));
+  const email = String(formData.get("email") ?? "").trim();
+  const name = String(formData.get("name") ?? "").trim();
+  const newRole = String(formData.get("role") ?? "") as StoreRole;
+
+  if (!["owner", "manager", "employee", "parttime"].includes(newRole)) {
+    return { error: "権限の指定が正しくありません。" };
+  }
+
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return { error: "管理者キーが未設定のため編集できません。" };
+  }
+
+  const updates: Record<string, unknown> = { user_metadata: { store_name: name } };
+  if (email) updates.email = email;
+
+  const { error: authError } = await admin.auth.admin.updateUserById(userId, updates);
+  if (authError) return { error: "メールアドレスの更新に失敗しました。" };
+
+  await admin.from("store_members").update({ role: newRole }).eq("store_id", storeId).eq("user_id", userId);
+
+  revalidatePath("/staff");
   revalidatePath("/settings");
   return { ok: true };
 }

@@ -5,24 +5,25 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { logout } from "@/app/login/actions";
 
-const LINKS = [
-  { href: "/", label: "ダッシュボード" },
-  { href: "/reservations", label: "予約" },
-  { href: "/customers", label: "顧客" },
-  { href: "/products", label: "商品" },
-  { href: "/inventory", label: "在庫" },
-  { href: "/ingredients", label: "原材料" },
-  { href: "/visitors", label: "来客数" },
-  { href: "/analytics", label: "分析" },
-  { href: "/settings", label: "設定" },
-];
-
-export default function NavBar({ storeName }: { storeName: string }) {
+export default function NavBar({ storeName, customerMode }: { storeName: string; customerMode?: string }) {
+  const isCorporate = customerMode === "corporate";
+  const LINKS = [
+    { href: "/", label: "ダッシュボード" },
+    { href: "/reservations", label: isCorporate ? "注文" : "予約" },
+    { href: "/customers", label: isCorporate ? "取引先" : "顧客" },
+    { href: "/products", label: "商品・在庫" },
+    { href: "/visitors", label: "来客数" },
+    { href: "/analytics", label: "分析" },
+    { href: "/staff", label: "シフト管理" },
+    { href: "/knead", label: "案をこねる" },
+    { href: "/settings", label: "設定" },
+  ];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
+    if (href === "/products") return pathname.startsWith("/products") || pathname.startsWith("/inventory") || pathname.startsWith("/ingredients");
     return pathname.startsWith(href);
   }
 

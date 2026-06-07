@@ -121,7 +121,7 @@ export default function VisitorsClient({ date, initialData }: Props) {
         await saveHourlyVisitors(date, data);
         setSaved(true);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "保存に失敗しました");
+        setError(e instanceof Error ? e.message : "保存できませんでした");
       }
     });
   }
@@ -208,7 +208,7 @@ export default function VisitorsClient({ date, initialData }: Props) {
             disabled={isPending}
             className="rounded-lg bg-bark-600 px-5 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
           >
-            {isPending ? "保存中..." : "一括保存"}
+            {isPending ? "保存しています" : "一括保存"}
           </button>
           {saved && <p className="text-sm text-green-600">保存しました</p>}
           {error && <p className="text-sm text-red-500">{error}</p>}

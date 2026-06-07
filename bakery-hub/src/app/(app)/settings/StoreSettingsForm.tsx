@@ -23,11 +23,13 @@ export default function StoreSettingsForm({
   pickupEnd,
   closedDays,
   closedDates,
+  customerMode,
 }: {
   pickupStart: string;
   pickupEnd: string;
   closedDays: string[];
   closedDates: string[];
+  customerMode: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -55,7 +57,7 @@ export default function StoreSettingsForm({
     startTransition(async () => {
       const res = await updateStoreSettings(fd);
       if ("error" in res) setMsg({ ok: false, text: res.error });
-      else setMsg({ ok: true, text: "保存しました。" });
+      else setMsg({ ok: true, text: "保存しました" });
     });
   }
 
@@ -64,6 +66,33 @@ export default function StoreSettingsForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-700">顧客タイプ</label>
+        <div className="flex gap-3">
+          {[
+            { value: "individual", label: "個人客", desc: "氏名・電話番号で管理" },
+            { value: "corporate", label: "法人・企業", desc: "会社名・担当者名で管理" },
+          ].map((opt) => (
+            <label
+              key={opt.value}
+              className="flex flex-1 cursor-pointer items-start gap-3 rounded-xl border border-gray-200 p-3 has-[:checked]:border-bark-500 has-[:checked]:bg-bark-50"
+            >
+              <input
+                type="radio"
+                name="customer_mode"
+                value={opt.value}
+                defaultChecked={customerMode === opt.value}
+                className="mt-0.5 accent-bark-600"
+              />
+              <div>
+                <p className="text-sm font-medium text-gray-800">{opt.label}</p>
+                <p className="text-xs text-gray-400">{opt.desc}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">受取可能な時間帯</label>
         <div className="flex items-center gap-2 text-sm">
@@ -145,7 +174,7 @@ export default function StoreSettingsForm({
         disabled={pending}
         className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
       >
-        {pending ? "保存中…" : "保存する"}
+        {pending ? "保存しています" : "保存"}
       </button>
     </form>
   );

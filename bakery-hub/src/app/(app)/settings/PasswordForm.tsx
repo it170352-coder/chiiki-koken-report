@@ -13,11 +13,11 @@ export default function PasswordForm() {
     e.preventDefault();
     setMsg(null);
     if (pw.length < 6) {
-      setMsg({ ok: false, text: "パスワードは6文字以上で入力してください。" });
+      setMsg({ ok: false, text: "パスワードは6文字以上にしてください" });
       return;
     }
     if (pw !== pw2) {
-      setMsg({ ok: false, text: "確認用パスワードが一致しません。" });
+      setMsg({ ok: false, text: "パスワードが一致していません" });
       return;
     }
     setLoading(true);
@@ -25,12 +25,12 @@ export default function PasswordForm() {
     const { error } = await supabase.auth.updateUser({ password: pw });
     setLoading(false);
     if (error) {
-      setMsg({ ok: false, text: "変更に失敗しました。時間をおいて再度お試しください。" });
+      setMsg({ ok: false, text: "変更できませんでした。少し待ってからもう一度どうぞ" });
       return;
     }
     setPw("");
     setPw2("");
-    setMsg({ ok: true, text: "パスワードを変更しました。" });
+    setMsg({ ok: true, text: "変更しました" });
   }
 
   const inputCls =
@@ -70,7 +70,7 @@ export default function PasswordForm() {
         disabled={loading}
         className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
       >
-        {loading ? "変更中…" : "パスワードを変更"}
+        {loading ? "変更しています" : "パスワードを変更"}
       </button>
     </form>
   );

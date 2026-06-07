@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentStore } from "@/lib/store";
 import type { ReservationStatus } from "@/lib/types";
+import { STATUS_LABELS, STATUS_LABELS_CORPORATE, STATUS_COLORS } from "@/lib/types";
 import SwipeToDelete from "@/components/SwipeToDelete";
 import StatusControl from "./StatusControl";
 import { deleteReservation } from "./actions";
@@ -15,6 +17,10 @@ type ResRow = {
 };
 
 export default async function ReservationsPage() {
+  const { supabase: storeSupabase, storeId } = await getCurrentStore();
+  const { data: store } = await storeSupabase.from("stores").select("customer_mode").eq("id", storeId ?? "").maybeSingle();
+  const isCorporate = store?.customer_mode === "corporate";
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("reservations")
@@ -25,7 +31,7 @@ export default async function ReservationsPage() {
 
   const list = (data ?? []) as unknown as ResRow[];
 
-  // 受取日でグループ化
+  // 納品日でグループ化
   const groups = new Map<string, ResRow[]>();
   list.forEach((r) => {
     const d = new Date(r.pickup_at).toLocaleDateString("ja-JP", {
@@ -41,18 +47,18 @@ export default async function ReservationsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-bark-900">予約・取り置き管理</h1>
+        <h1 className="text-xl font-bold text-bark-900">{isCorporate ? "注文管理" : "予約・取り置き管理"}</h1>
         <Link
           href="/reservations/new"
           className="rounded-lg bg-bark-600 px-4 py-2 text-sm font-semibold text-white hover:bg-bark-700"
         >
-          ＋ 新規予約
+          ＋ {isCorporate ? "新規注文" : "新規予約"}
         </Link>
       </div>
 
       {list.length === 0 ? (
         <p className="rounded-2xl border border-bark-100 bg-white p-5 text-sm text-gray-400">
-          予約がまだありません。「新規予約」から登録してください。
+          {isCorporate ? "注文がまだありません。「新規注文」から登録してください。" : "予約がまだありません。「新規予約」から登録してください。"}
         </p>
       ) : (
         <div className="space-y-5">
@@ -69,14 +75,14 @@ export default async function ReservationsPage() {
                     <div className="flex items-start justify-between gap-3 p-4">
                       <div className="min-w-0">
                         <p className="font-medium text-gray-800">
-                          {r.customers?.name ?? "（顧客未指定）"}
+                          {r.customers?.name ?? (isCorporate ? "（取引先未指定）" : "（顧客未指定）")}
                           <span className="ml-2 text-sm font-normal text-gray-400">
                             {new Date(r.pickup_at).toLocaleTimeString("ja-JP", {
                               hour: "2-digit",
                               minute: "2-digit",
                               timeZone: "Asia/Tokyo",
                             })}
-                            受取
+                            納品
                           </span>
                         </p>
                         <p className="mt-1 text-sm text-gray-600">
@@ -91,7 +97,7 @@ export default async function ReservationsPage() {
                           <p className="mt-1 text-xs text-gray-400">備考：{r.memo}</p>
                         )}
                       </div>
-                      <StatusControl id={r.id} status={r.status} />
+                      <StatusControl id={r.id} status={r.status} isCorporate={isCorporate} />
                     </div>
                     </SwipeToDelete>
                   </div>

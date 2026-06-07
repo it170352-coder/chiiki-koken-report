@@ -30,7 +30,7 @@ function StatusBadge({ status }: { status: IngredientStatus }) {
 export default function IngredientRow({ ingredient }: { ingredient: Ingredient }) {
   const [stock, setStock] = useState(ingredient.stock_quantity);
   const [inputValue, setInputValue] = useState(String(ingredient.stock_quantity));
-  const [saved, setSaved] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [pending, startTransition] = useTransition();
   const [deleting, startDeleteTransition] = useTransition();
 
@@ -40,14 +40,12 @@ export default function IngredientRow({ ingredient }: { ingredient: Ingredient }
     const n = Math.max(0, stock - 1);
     setStock(n);
     setInputValue(String(n));
-    setSaved(false);
   }
 
   function handlePlus() {
     const n = stock + 1;
     setStock(n);
     setInputValue(String(n));
-    setSaved(false);
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,14 +56,12 @@ export default function IngredientRow({ ingredient }: { ingredient: Ingredient }
     const n = Math.max(0, parseFloat(inputValue) || 0);
     setStock(n);
     setInputValue(String(n));
-    setSaved(false);
   }
 
   function handleSave() {
-    setSaved(false);
     startTransition(async () => {
       await updateStock(ingredient.id, stock);
-      setSaved(true);
+      setSavedAt(new Date());
     });
   }
 
@@ -120,13 +116,20 @@ export default function IngredientRow({ ingredient }: { ingredient: Ingredient }
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          disabled={pending}
-          className="self-center rounded-lg bg-bark-600 px-3 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
-        >
-          {pending ? "保存中" : saved ? "保存済" : "保存"}
-        </button>
+        <div className="flex flex-col items-center gap-1">
+          <button
+            onClick={handleSave}
+            disabled={pending}
+            className="rounded-lg bg-bark-600 px-3 py-2 text-sm font-semibold text-white hover:bg-bark-700 disabled:opacity-50"
+          >
+            {pending ? "保存しています" : "保存"}
+          </button>
+          {savedAt && (
+            <span className="text-xs text-gray-400">
+              {savedAt.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+        </div>
 
         <button
           onClick={handleDelete}

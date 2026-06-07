@@ -1,5 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Product } from "@/lib/types";
+import SalesLineChart from "./SalesLineChart";
+import CategoryLineChart from "./CategoryLineChart";
+import DayOfWeekChart from "./DayOfWeekChart";
+import HourlyChart from "./HourlyChart";
+import SalesCsvButton from "./SalesCsvButton";
+import { getCurrentStore } from "@/lib/store";
 
 function fmtDate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -30,8 +36,9 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
   const from = typeof sp.from === "string" && sp.from ? sp.from : fmtDate(defaultFrom);
   const to = typeof sp.to === "string" && sp.to ? sp.to : fmtDate(today);
 
+  const { storeId } = await getCurrentStore();
   const supabase = await createClient();
-  const [{ data: products }, { data: logs }] = await Promise.all([
+  const [{ data: products }, { data: logs }, { data: visitors }] = await Promise.all([
     supabase.from("products").select("id, name, price, category"),
     supabase
       .from("inventory_logs")
@@ -39,6 +46,12 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
       .gte("date", from)
       .lte("date", to)
       .order("date"),
+    supabase
+      .from("hourly_visitors")
+      .select("date, hour, visitor_count")
+      .eq("store_id", storeId ?? "")
+      .gte("date", from)
+      .lte("date", to),
   ]);
 
   const priceMap = new Map<string, { name: string; price: number; category: string }>();
@@ -62,6 +75,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
   const byDate = new Map<string, number>();
   const byProduct = new Map<string, { name: string; qty: number; sales: number; wasted: number }>();
   const byCategory = new Map<string, { sales: number; qty: number; wasted: number }>();
+  const byCategoryDate = new Map<string, Map<string, number>>();
 
   for (const l of logList) {
     const info = priceMap.get(l.product_id);
@@ -88,16 +102,54 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
     cat.qty += l.sold;
     cat.wasted += l.wasted;
     byCategory.set(catName, cat);
+
+    const cdMap = byCategoryDate.get(catName) ?? new Map<string, number>();
+    cdMap.set(l.date, (cdMap.get(l.date) ?? 0) + sales);
+    byCategoryDate.set(catName, cdMap);
   }
 
-  const dailyMax = Math.max(1, ...[...byDate.values()]);
   const dailySeries = [...byDate.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const allDates = dailySeries.map(([d]) => d);
+  const categoryNames = [...byCategory.keys()];
+  const categoryChartData = allDates.map((date) => {
+    const row: Record<string, string | number> = { date };
+    for (const cat of categoryNames) {
+      row[cat] = byCategoryDate.get(cat)?.get(date) ?? 0;
+    }
+    return row;
+  });
+
+  // 曜日別集計（平均売上）
+  const byDow = new Map<number, { sales: number; count: number }>();
+  for (const [date, sales] of byDate) {
+    const dow = new Date(`${date}T00:00:00`).getDay();
+    const cur = byDow.get(dow) ?? { sales: 0, count: 0 };
+    cur.sales += sales;
+    cur.count += 1;
+    byDow.set(dow, cur);
+  }
+  const dowData = Array.from({ length: 7 }, (_, i) => ({
+    day: i,
+    sales: byDow.get(i)?.sales ?? 0,
+    count: byDow.get(i)?.count ?? 0,
+  }));
+
+  // 時間帯別集計（平均来客数）
+  const visitorList = (visitors ?? []) as { date: string; hour: number; visitor_count: number }[];
+  const byHour = new Map<number, { total: number; days: Set<string> }>();
+  for (const v of visitorList) {
+    const cur = byHour.get(v.hour) ?? { total: 0, days: new Set() };
+    cur.total += v.visitor_count;
+    cur.days.add(v.date);
+    byHour.set(v.hour, cur);
+  }
+  const hourlyData = Array.from({ length: 16 }, (_, i) => {
+    const hour = i + 6;
+    const d = byHour.get(hour);
+    return { hour, avg: d ? d.total / Math.max(1, d.days.size) : 0 };
+  });
 
   const productRanking = [...byProduct.values()].sort((a, b) => b.sales - a.sales);
-  const categoryRanking = [...byCategory.entries()]
-    .map(([name, v]) => ({ name, ...v }))
-    .sort((a, b) => b.sales - a.sales);
-  const categoryMax = Math.max(1, ...categoryRanking.map((c) => c.sales));
   const wasteRanking = [...byProduct.values()]
     .filter((p) => p.wasted > 0)
     .sort((a, b) => b.wasted - a.wasted);
@@ -108,6 +160,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-bold text-bark-900">販売分析</h1>
+        <SalesCsvButton dailySeries={dailySeries.map(([date, sales]) => ({ date, sales }))} productRanking={productRanking} from={from} to={to} />
         <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           <input
             type="date"
@@ -144,51 +197,27 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
 
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <h2 className="mb-4 font-semibold text-gray-700">日別売上推移</h2>
-        {dailySeries.length === 0 ? (
-          <p className="text-sm text-gray-400">この期間の在庫記録がありません。</p>
-        ) : (
-          <div className="space-y-2">
-            {dailySeries.map(([date, sales]) => (
-              <div key={date} className="flex items-center gap-3 text-sm">
-                <span className="w-20 shrink-0 text-gray-500">{date.slice(5)}</span>
-                <div className="h-5 flex-1 overflow-hidden rounded bg-bark-50">
-                  <div
-                    className="h-full rounded bg-bark-500"
-                    style={{ width: `${Math.max(2, (sales / dailyMax) * 100)}%` }}
-                  />
-                </div>
-                <span className="w-24 shrink-0 text-right font-medium text-gray-700">
-                  ¥{sales.toLocaleString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+        <SalesLineChart
+          data={dailySeries.map(([date, sales]) => ({ date, sales }))}
+        />
       </div>
 
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
-        <h2 className="mb-4 font-semibold text-gray-700">カテゴリ別売上</h2>
-        {categoryRanking.length === 0 ? (
-          <p className="text-sm text-gray-400">データがありません。</p>
-        ) : (
-          <div className="space-y-3">
-            {categoryRanking.map((c) => (
-              <div key={c.name} className="flex items-center gap-3 text-sm">
-                <span className="w-24 shrink-0 text-gray-600">{c.name}</span>
-                <div className="h-5 flex-1 overflow-hidden rounded bg-bark-50">
-                  <div
-                    className="h-full rounded bg-bark-500"
-                    style={{ width: `${Math.max(2, (c.sales / categoryMax) * 100)}%` }}
-                  />
-                </div>
-                <span className="w-16 shrink-0 text-right text-xs text-gray-400">{c.qty}個</span>
-                <span className="w-24 shrink-0 text-right font-medium text-gray-700">
-                  ¥{c.sales.toLocaleString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+        <h2 className="mb-4 font-semibold text-gray-700">カテゴリ別売上推移</h2>
+        <CategoryLineChart data={categoryChartData} categories={categoryNames} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
+          <h2 className="mb-1 font-semibold text-gray-700">曜日別平均売上</h2>
+          <p className="mb-3 text-xs text-gray-400">土日はベージュ色で表示</p>
+          <DayOfWeekChart data={dowData} />
+        </div>
+        <div className="rounded-2xl border border-bark-100 bg-white p-5">
+          <h2 className="mb-1 font-semibold text-gray-700">時間帯別平均来客数</h2>
+          <p className="mb-3 text-xs text-gray-400">来客数の記録をもとに集計（6〜21時）</p>
+          <HourlyChart data={hourlyData} />
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -215,7 +244,7 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
         <div className="rounded-2xl border border-bark-100 bg-white p-5">
           <h2 className="mb-3 font-semibold text-gray-700">廃棄の多い商品</h2>
           {wasteRanking.length === 0 ? (
-            <p className="text-sm text-gray-400">この期間の廃棄はありません。</p>
+            <p className="text-sm text-gray-400">この期間は廃棄なし</p>
           ) : (
             <ul className="space-y-2">
               {wasteRanking.map((p, i) => (
