@@ -7,6 +7,7 @@ import { upsertIngredient } from "../ingredients/actions";
 import ProductRow from "./ProductRow";
 import IngredientRow from "../ingredients/IngredientRow";
 import InventoryBulkClient from "../inventory/InventoryBulkClient";
+import CsvImportButton from "./CsvImportButton";
 import Link from "next/link";
 
 function todayStr() {
@@ -99,6 +100,9 @@ export default async function ProductsPage(props: PageProps<"/products">) {
       {/* 商品タブ */}
       {tab === "products" && (
         <>
+          <div className="flex justify-end">
+            <CsvImportButton type="products" />
+          </div>
           <form
             action={createProduct}
             className="grid gap-3 rounded-2xl border border-bark-100 bg-white p-5 sm:grid-cols-[2fr_1fr_1fr_auto]"
@@ -145,11 +149,14 @@ export default async function ProductsPage(props: PageProps<"/products">) {
               製造数・販売数・廃棄数を入力すると残数が自動計算されます。廃棄合計：
               <span className="font-semibold text-bark-700">{totalWasted} 個</span>
             </p>
-            <form method="get" className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <CsvImportButton type="inventory" date={date} />
+              <form method="get" className="flex items-center gap-2">
               <input type="hidden" name="tab" value="inventory" />
               <input type="date" name="date" defaultValue={date} className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-bark-500 focus:outline-none" />
               <button type="submit" className="rounded-lg border border-bark-300 px-3 py-1.5 text-sm font-medium text-bark-700 hover:bg-bark-50">表示</button>
-            </form>
+              </form>
+            </div>
           </div>
 
           {inventoryProducts.length === 0 ? (
@@ -165,10 +172,11 @@ export default async function ProductsPage(props: PageProps<"/products">) {
       {/* 原材料タブ */}
       {tab === "ingredients" && (
         <>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <Link href="/ingredients/recipes" className="rounded-lg border border-bark-300 px-3 py-2 text-sm font-medium text-bark-700 hover:bg-bark-50">
               レシピ管理
             </Link>
+            <CsvImportButton type="ingredients" />
           </div>
 
           <div className="rounded-2xl border border-bark-100 bg-white p-5">
