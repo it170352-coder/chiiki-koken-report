@@ -62,7 +62,7 @@ function KpiCard({
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium uppercase tracking-wide text-gray-400">{label}</p>
+        <p className="truncate text-xs font-medium text-gray-500">{label}</p>
         <p className="mt-0.5 text-2xl font-bold leading-none text-bark-900">
           {value}
           {unit && <span className="ml-1 text-sm font-normal text-gray-400">{unit}</span>}
@@ -209,7 +209,12 @@ export default async function DashboardPage() {
       {/* アラートバナー（MarketMan スタイル） */}
       {(hasAlert || hasCaution) && (
         <div className={`flex items-start gap-3 rounded-2xl border px-5 py-4 ${hasAlert ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"}`}>
-          <span className="mt-0.5 text-lg">{hasAlert ? "🚨" : "⚠️"}</span>
+          <span className={`mt-0.5 flex-shrink-0 ${hasAlert ? "text-red-500" : "text-amber-500"}`}>
+            {hasAlert
+              ? <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 7a1 1 0 112 0v4a1 1 0 11-2 0V7zm1 8a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 15z" clipRule="evenodd"/></svg>
+              : <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"/></svg>
+            }
+          </span>
           <div className="flex-1 text-sm">
             <p className={`font-semibold ${hasAlert ? "text-red-700" : "text-amber-700"}`}>
               原材料の在庫が不足しています
@@ -220,8 +225,8 @@ export default async function DashboardPage() {
               {hasCaution && <span className="text-amber-600 font-medium">注意 {cautionIngredients.length} 件</span>}
             </p>
           </div>
-          <Link href="/ingredients" className="flex-shrink-0 text-sm font-medium text-bark-700 hover:underline">
-            確認する →
+          <Link href="/ingredients" className="flex-shrink-0 flex items-center gap-1 text-sm font-medium text-bark-700 hover:underline">
+            確認する<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8h10M9 4l4 4-4 4"/></svg>
           </Link>
         </div>
       )}
@@ -231,7 +236,7 @@ export default async function DashboardPage() {
         <KpiCard
           label="本日の売上"
           value={`¥${todaySales.toLocaleString()}`}
-          icon="💰"
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-4-4h8M9 4h6a2 2 0 012 2v12a2 2 0 01-2 2H9a2 2 0 01-2-2V6a2 2 0 012-2z"/><circle cx="12" cy="10" r="2" /></svg>}
           href="/inventory"
           accent="green"
         />
@@ -239,7 +244,7 @@ export default async function DashboardPage() {
           label="本日の来客数"
           value={todayVisitors}
           unit="人"
-          icon="👥"
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20H7a5 5 0 010-10h.5M15 7a4 4 0 11-8 0 4 4 0 018 0zm4 13a5 5 0 00-5-5"/></svg>}
           href="/visitors"
           accent="blue"
         />
@@ -247,7 +252,7 @@ export default async function DashboardPage() {
           label="本日の予約"
           value={todayReservationCount ?? 0}
           unit="件"
-          icon="📋"
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><rect x="3" y="4" width="18" height="18" rx="2"/><path strokeLinecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>}
           href="/reservations"
           accent="bark"
         />
@@ -255,7 +260,7 @@ export default async function DashboardPage() {
           label="本日の廃棄数"
           value={todayWasted}
           unit="個"
-          icon="🗑️"
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a1 1 0 01-1-1V5a1 1 0 011-1h8a1 1 0 011 1v1a1 1 0 01-1 1H9z"/></svg>}
           accent={todayWasted > 0 ? "yellow" : "bark"}
         />
       </div>
@@ -303,8 +308,8 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-bark-100 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-gray-800">在庫状況</h2>
-            <Link href="/inventory" className="text-xs font-medium text-bark-600 hover:underline">
-              記録する →
+            <Link href="/inventory" className="flex items-center gap-1 text-xs font-medium text-bark-600 hover:underline">
+              記録する<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3 w-3"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8h10M9 4l4 4-4 4"/></svg>
             </Link>
           </div>
           {stock.length === 0 ? (
@@ -346,13 +351,13 @@ export default async function DashboardPage() {
         >
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-gray-800">原材料アラート</h2>
-            <span className="text-xs font-medium text-bark-600">詳細を見る →</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-bark-600">詳細を見る<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3 w-3"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
           {ingredientList.length === 0 ? (
             <p className="text-sm text-gray-400">まだ登録されていません</p>
           ) : alertIngredients.length === 0 && cautionIngredients.length === 0 ? (
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-base">✓</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600"><svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg></span>
               <p className="text-sm font-medium text-green-700">すべての原材料は正常です</p>
             </div>
           ) : (
@@ -382,8 +387,8 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-bark-100 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-gray-800">製造可能数</h2>
-            <Link href="/ingredients/recipes" className="text-xs font-medium text-bark-600 hover:underline">
-              レシピを管理 →
+            <Link href="/ingredients/recipes" className="flex items-center gap-1 text-xs font-medium text-bark-600 hover:underline">
+              レシピを管理<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3 w-3"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8h10M9 4l4 4-4 4"/></svg>
             </Link>
           </div>
           {producibleList.length === 0 ? (
