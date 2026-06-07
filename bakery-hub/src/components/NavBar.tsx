@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { logout } from "@/app/login/actions";
 
-export default function NavBar({ storeName, customerMode }: { storeName: string; customerMode?: string }) {
+export default function NavBar({ storeName, customerMode, showAnalytics = true }: { storeName: string; customerMode?: string; showAnalytics?: boolean }) {
   const isCorporate = customerMode === "corporate";
   const LINKS = [
     { href: "/", label: "ダッシュボード" },
@@ -13,7 +13,7 @@ export default function NavBar({ storeName, customerMode }: { storeName: string;
     { href: "/customers", label: isCorporate ? "取引先" : "顧客" },
     { href: "/products", label: "商品・在庫" },
     { href: "/visitors", label: "来客数" },
-    { href: "/analytics", label: "分析" },
+    ...(showAnalytics ? [{ href: "/analytics", label: "分析" }] : []),
     { href: "/staff", label: "シフト管理" },
     { href: "/knead", label: "案をこねる" },
     { href: "/settings", label: "設定" },

@@ -37,3 +37,8 @@ export function canManageStore(role: StoreRole | null): boolean {
 export function canManageMembers(role: StoreRole | null): boolean {
   return role === "owner";
 }
+
+// 分析画面の閲覧が許可されるロールか（オーナー・店長のみ）
+export function canViewAnalytics(role: StoreRole | null): boolean {
+  return role === "owner" || role === "manager";
+}

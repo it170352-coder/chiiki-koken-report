@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentStore } from "@/lib/store";
+import { getCurrentStore, canViewAnalytics } from "@/lib/store";
 import NavBar from "@/components/NavBar";
 
 export default async function AppLayout({
@@ -7,7 +7,7 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { supabase, userId, storeId } = await getCurrentStore();
+  const { supabase, userId, storeId, role } = await getCurrentStore();
 
   if (!userId) {
     redirect("/login");
@@ -21,7 +21,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <NavBar storeName={store?.name ?? ""} customerMode={store?.customer_mode ?? "individual"} />
+      <NavBar storeName={store?.name ?? ""} customerMode={store?.customer_mode ?? "individual"} showAnalytics={canViewAnalytics(role)} />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
     </div>
   );

@@ -5,7 +5,8 @@ import CategoryLineChart from "./CategoryLineChart";
 import DayOfWeekChart from "./DayOfWeekChart";
 import HourlyChart from "./HourlyChart";
 import SalesCsvButton from "./SalesCsvButton";
-import { getCurrentStore } from "@/lib/store";
+import { getCurrentStore, canViewAnalytics } from "@/lib/store";
+import { redirect } from "next/navigation";
 
 function fmtDate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -36,7 +37,8 @@ export default async function AnalyticsPage(props: PageProps<"/analytics">) {
   const from = typeof sp.from === "string" && sp.from ? sp.from : fmtDate(defaultFrom);
   const to = typeof sp.to === "string" && sp.to ? sp.to : fmtDate(today);
 
-  const { storeId } = await getCurrentStore();
+  const { storeId, role } = await getCurrentStore();
+  if (!canViewAnalytics(role)) redirect("/");
   const supabase = await createClient();
   const [{ data: products }, { data: logs }, { data: visitors }] = await Promise.all([
     supabase.from("products").select("id, name, price, category"),
