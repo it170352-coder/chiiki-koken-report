@@ -28,7 +28,7 @@ export default async function VisitorsPage(props: PageProps<"/visitors">) {
   const { supabase, storeId } = await getCurrentStore();
 
   let initialData: { hour: number; count: number }[] = [];
-  let monthlyData: { date: string; total: number }[] = [];
+  let monthlyData: { hour: number; avg: number }[] = [];
 
   if (storeId) {
     if (view === "monthly") {
@@ -38,18 +38,22 @@ export default async function VisitorsPage(props: PageProps<"/visitors">) {
 
       const { data } = await supabase
         .from("hourly_visitors")
-        .select("date, visitor_count")
+        .select("hour, visitor_count")
         .eq("store_id", storeId)
         .gte("date", from)
         .lte("date", to);
 
-      const totals: Record<string, number> = {};
+      const hourSum: Record<number, number> = {};
+      const hourDays: Record<number, number> = {};
       for (const row of data ?? []) {
-        totals[row.date] = (totals[row.date] ?? 0) + (row.visitor_count as number);
+        const h = row.hour as number;
+        hourSum[h] = (hourSum[h] ?? 0) + (row.visitor_count as number);
+        hourDays[h] = (hourDays[h] ?? 0) + 1;
       }
-      monthlyData = Object.entries(totals)
-        .map(([d, total]) => ({ date: d, total }))
-        .sort((a, b) => a.date.localeCompare(b.date));
+      monthlyData = Object.keys(hourSum)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map((h) => ({ hour: h, avg: Math.round(hourSum[h] / hourDays[h]) }));
     } else {
       const { data } = await supabase
         .from("hourly_visitors")

@@ -25,7 +25,7 @@ type Props = {
   date: string;
   month: string;
   initialData: HourlyData[];
-  monthlyData: { date: string; total: number }[];
+  monthlyData: { hour: number; avg: number }[];
 };
 
 function HourInput({
@@ -140,10 +140,9 @@ export default function VisitorsClient({ view, date, month, initialData, monthly
     });
   }
 
-  const monthlyTotal = monthlyData.reduce((sum, d) => sum + d.total, 0);
   const monthlyChartData = monthlyData.map((d) => ({
-    day: `${Number(d.date.slice(8))}日`,
-    来客数: d.total,
+    hour: `${d.hour}時`,
+    平均来客数: d.avg,
   }));
 
   return (
@@ -166,17 +165,10 @@ export default function VisitorsClient({ view, date, month, initialData, monthly
 
       {view === "monthly" ? (
         <>
-          {/* 月間合計 */}
-          <div className="rounded-2xl border border-bark-100 bg-white p-5">
-            <p className="text-sm text-gray-500">{month.replace("-", "年")}月の来客数合計</p>
-            <p className="mt-1 text-3xl font-bold text-bark-900">
-              {monthlyTotal.toLocaleString()}
-              <span className="ml-1 text-sm font-normal text-gray-400">人</span>
-            </p>
-          </div>
           {/* 月間グラフ */}
           <div className="rounded-2xl border border-bark-100 bg-white p-5">
-            <h2 className="mb-4 font-semibold text-gray-700">日別 来客数グラフ（{month.replace("-", "年")}月）</h2>
+            <h2 className="mb-1 font-semibold text-gray-700">時間帯別 来客数（{month.replace("-", "年")}月 平均）</h2>
+            <p className="mb-4 text-xs text-gray-400">今月の時間帯ごとの平均来客数</p>
             {monthlyChartData.length === 0 ? (
               <p className="py-12 text-center text-sm text-gray-400">この月のデータがありません</p>
             ) : (
@@ -184,11 +176,10 @@ export default function VisitorsClient({ view, date, month, initialData, monthly
                 <BarChart data={monthlyChartData} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0e8df" />
                   <XAxis
-                    dataKey="day"
-                    tick={{ fontSize: 10, fill: "#6b7280" }}
+                    dataKey="hour"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
                     axisLine={false}
                     tickLine={false}
-                    interval={monthlyChartData.length > 15 ? 1 : 0}
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: "#6b7280" }}
@@ -197,10 +188,10 @@ export default function VisitorsClient({ view, date, month, initialData, monthly
                     allowDecimals={false}
                   />
                   <Tooltip
-                    formatter={(value) => [`${value}人`, "来客数"]}
+                    formatter={(value) => [`${value}人`, "平均来客数"]}
                     contentStyle={{ borderRadius: "8px", border: "1px solid #e5d5c5", fontSize: 12 }}
                   />
-                  <Bar dataKey="来客数" fill="#baa08a" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="平均来客数" fill="#baa08a" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
