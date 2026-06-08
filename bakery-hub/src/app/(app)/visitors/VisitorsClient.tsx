@@ -85,17 +85,26 @@ export default function VisitorsClient({ view, date, month, initialData, monthly
 
   const HOURS = ALL_HOURS.filter((h) => h >= startHour && h <= endHour);
 
-  const [counts, setCounts] = useState<Record<number, number>>(() => {
+  const buildCounts = (data: HourlyData[]) => {
     const map: Record<number, number> = {};
     for (const h of ALL_HOURS) {
-      const found = initialData.find((d) => d.hour === h);
+      const found = data.find((d) => d.hour === h);
       map[h] = found?.count ?? 0;
     }
     return map;
-  });
+  };
+
+  const [counts, setCounts] = useState<Record<number, number>>(() => buildCounts(initialData));
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setCounts(buildCounts(initialData));
+    setSaved(false);
+    setError(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   function applyHourSettings() {
     const s = Math.min(tempStart, tempEnd);
