@@ -77,6 +77,7 @@ export default async function VisitorsPage(props: PageProps<"/visitors">) {
         </div>
       </div>
       <VisitorsClient
+        key={view === "monthly" ? `monthly-${month}` : `daily-${date}`}
         view={view}
         date={date}
         month={month}
