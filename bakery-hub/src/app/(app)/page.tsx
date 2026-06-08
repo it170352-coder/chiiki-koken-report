@@ -131,7 +131,7 @@ export default async function DashboardPage() {
     0,
   );
 
-  // 今月の日別来客数合計
+  // 今月の時間帯別平均来客数
   const jstNow = new Date(Date.now() + JST_OFFSET_MS);
   const monthFrom = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}-01`;
   const lastDay = new Date(Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() + 1, 0)).getUTCDate();
@@ -139,17 +139,22 @@ export default async function DashboardPage() {
 
   const { data: monthlyVisitorsRaw } = await supabase
     .from("hourly_visitors")
-    .select("date, visitor_count")
+    .select("hour, visitor_count")
     .gte("date", monthFrom)
     .lte("date", monthTo);
 
-  const monthlyTotalsMap: Record<string, number> = {};
+  // 時間帯ごとに合計・件数を集計して平均を算出
+  const hourSum: Record<number, number> = {};
+  const hourDays: Record<number, number> = {};
   for (const r of monthlyVisitorsRaw ?? []) {
-    monthlyTotalsMap[r.date] = (monthlyTotalsMap[r.date] ?? 0) + ((r.visitor_count as number) ?? 0);
+    const h = r.hour as number;
+    hourSum[h] = (hourSum[h] ?? 0) + ((r.visitor_count as number) ?? 0);
+    hourDays[h] = (hourDays[h] ?? 0) + 1;
   }
-  const monthlyVisitors = Object.entries(monthlyTotalsMap)
-    .map(([date, total]) => ({ date, total }))
-    .sort((a, b) => a.date.localeCompare(b.date));
+  const monthlyVisitors = Object.keys(hourSum)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((h) => ({ hour: h, avg: Math.round(hourSum[h] / hourDays[h]) }));
 
   const { count: customerCount } = await supabase
     .from("customers")
