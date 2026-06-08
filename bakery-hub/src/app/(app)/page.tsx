@@ -131,6 +131,26 @@ export default async function DashboardPage() {
     0,
   );
 
+  // 今月の日別来客数合計
+  const jstNow = new Date(Date.now() + JST_OFFSET_MS);
+  const monthFrom = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  const lastDay = new Date(Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth() + 1, 0)).getUTCDate();
+  const monthTo = `${jstNow.getUTCFullYear()}-${String(jstNow.getUTCMonth() + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
+
+  const { data: monthlyVisitorsRaw } = await supabase
+    .from("hourly_visitors")
+    .select("date, visitor_count")
+    .gte("date", monthFrom)
+    .lte("date", monthTo);
+
+  const monthlyTotalsMap: Record<string, number> = {};
+  for (const r of monthlyVisitorsRaw ?? []) {
+    monthlyTotalsMap[r.date] = (monthlyTotalsMap[r.date] ?? 0) + ((r.visitor_count as number) ?? 0);
+  }
+  const monthlyVisitors = Object.entries(monthlyTotalsMap)
+    .map(([date, total]) => ({ date, total }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+
   const { count: customerCount } = await supabase
     .from("customers")
     .select("id", { count: "exact", head: true });
@@ -332,7 +352,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* 来客数グラフ */}
-      <DashboardVisitorsChart data={(visitorsData ?? []).map((r) => ({ hour: r.hour as number, count: (r.visitor_count as number) ?? 0 }))} />
+      <DashboardVisitorsChart data={monthlyVisitors} />
 
       {/* 2カラム: 原材料アラート + 製造可能数 */}
       <div className="grid gap-4 md:grid-cols-2">
