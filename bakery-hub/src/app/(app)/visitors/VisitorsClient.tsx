@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   BarChart,
   Bar,
@@ -12,7 +13,7 @@ import {
 } from "recharts";
 import { saveHourlyVisitors } from "./actions";
 
-const ALL_HOURS = Array.from({ length: 24 }, (_, i) => i); // 0〜23時
+const ALL_HOURS = Array.from({ length: 24 }, (_, i) => i);
 const STORAGE_KEY = "visitors_hours_range";
 const DEFAULT_START = 6;
 const DEFAULT_END = 21;
@@ -20,8 +21,11 @@ const DEFAULT_END = 21;
 type HourlyData = { hour: number; count: number };
 
 type Props = {
+  view: string;
   date: string;
+  month: string;
   initialData: HourlyData[];
+  monthlyData: { date: string; total: number }[];
 };
 
 function HourInput({
@@ -56,7 +60,8 @@ function HourInput({
   );
 }
 
-export default function VisitorsClient({ date, initialData }: Props) {
+export default function VisitorsClient({ view, date, month, initialData, monthlyData }: Props) {
+  const router = useRouter();
   const [startHour, setStartHour] = useState(DEFAULT_START);
   const [endHour, setEndHour] = useState(DEFAULT_END);
   const [showSettings, setShowSettings] = useState(false);
@@ -126,8 +131,74 @@ export default function VisitorsClient({ date, initialData }: Props) {
     });
   }
 
+  const monthlyTotal = monthlyData.reduce((sum, d) => sum + d.total, 0);
+  const monthlyChartData = monthlyData.map((d) => ({
+    day: `${Number(d.date.slice(8))}日`,
+    来客数: d.total,
+  }));
+
   return (
     <div className="space-y-6">
+      {/* タブ */}
+      <div className="flex gap-1 rounded-xl border border-bark-100 bg-bark-50 p-1 w-fit">
+        <button
+          onClick={() => router.push(`/visitors?date=${date}`)}
+          className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${view !== "monthly" ? "bg-white text-bark-900 shadow-sm" : "text-gray-500 hover:text-bark-700"}`}
+        >
+          日別
+        </button>
+        <button
+          onClick={() => router.push(`/visitors?view=monthly&month=${month}`)}
+          className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${view === "monthly" ? "bg-white text-bark-900 shadow-sm" : "text-gray-500 hover:text-bark-700"}`}
+        >
+          月間
+        </button>
+      </div>
+
+      {view === "monthly" ? (
+        <>
+          {/* 月間合計 */}
+          <div className="rounded-2xl border border-bark-100 bg-white p-5">
+            <p className="text-sm text-gray-500">{month.replace("-", "年")}月の来客数合計</p>
+            <p className="mt-1 text-3xl font-bold text-bark-900">
+              {monthlyTotal.toLocaleString()}
+              <span className="ml-1 text-sm font-normal text-gray-400">人</span>
+            </p>
+          </div>
+          {/* 月間グラフ */}
+          <div className="rounded-2xl border border-bark-100 bg-white p-5">
+            <h2 className="mb-4 font-semibold text-gray-700">日別 来客数グラフ（{month.replace("-", "年")}月）</h2>
+            {monthlyChartData.length === 0 ? (
+              <p className="py-12 text-center text-sm text-gray-400">この月のデータがありません</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={monthlyChartData} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0e8df" />
+                  <XAxis
+                    dataKey="day"
+                    tick={{ fontSize: 10, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    interval={monthlyChartData.length > 15 ? 1 : 0}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    formatter={(value) => [`${value}人`, "来客数"]}
+                    contentStyle={{ borderRadius: "8px", border: "1px solid #e5d5c5", fontSize: 12 }}
+                  />
+                  <Bar dataKey="来客数" fill="#baa08a" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
       {/* 合計 */}
       <div className="rounded-2xl border border-bark-100 bg-white p-5">
         <p className="text-sm text-gray-500">本日の来客数合計</p>
@@ -242,6 +313,8 @@ export default function VisitorsClient({ date, initialData }: Props) {
           </BarChart>
         </ResponsiveContainer>
       </div>
+        </>
+      )}
     </div>
   );
 }
