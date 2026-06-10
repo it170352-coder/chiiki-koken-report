@@ -46,11 +46,9 @@ export default async function PortalTop() {
           ))}
         </div>
 
-        {/* フッターリンク */}
-        <div className="mt-12 flex items-center justify-center gap-6 text-xs text-gray-400">
-          <span>{user?.email}</span>
-          <span>·</span>
-          <Link href="/login" className="hover:text-gray-600 transition-colors">ログアウト</Link>
+        {/* フッター */}
+        <div className="mt-12 text-center text-xs text-gray-400">
+          {user?.email}
         </div>
       </div>
     </div>
