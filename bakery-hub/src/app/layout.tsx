@@ -20,12 +20,12 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "Bakery Hub",
-  description: "パン屋さんのための業務管理SaaS",
+  title: "RaidQ Portal",
+  description: "株式会社レイドキューが提供する業務改善SaaSプラットフォーム",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    title: "Bakery Hub",
+    title: "RaidQ Portal",
     statusBarStyle: "default",
   },
 };

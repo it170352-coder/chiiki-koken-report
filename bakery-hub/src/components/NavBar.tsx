@@ -7,23 +7,24 @@ import { logout } from "@/app/login/actions";
 
 export default function NavBar({ storeName, customerMode, showAnalytics = true }: { storeName: string; customerMode?: string; showAnalytics?: boolean }) {
   const isCorporate = customerMode === "corporate";
+  const BASE = "/bakery";
   const LINKS = [
-    { href: "/", label: "ダッシュボード" },
-    { href: "/reservations", label: isCorporate ? "注文" : "予約" },
-    { href: "/customers", label: isCorporate ? "取引先" : "顧客" },
-    { href: "/products", label: "商品・在庫" },
-    { href: "/visitors", label: "来客数" },
-    ...(showAnalytics ? [{ href: "/analytics", label: "分析" }] : []),
-    { href: "/staff", label: "シフト管理" },
-    { href: "/knead", label: "案をこねる" },
-    { href: "/settings", label: "設定" },
+    { href: `${BASE}`, label: "ダッシュボード" },
+    { href: `${BASE}/reservations`, label: isCorporate ? "注文" : "予約" },
+    { href: `${BASE}/customers`, label: isCorporate ? "取引先" : "顧客" },
+    { href: `${BASE}/products`, label: "商品・在庫" },
+    { href: `${BASE}/visitors`, label: "来客数" },
+    ...(showAnalytics ? [{ href: `${BASE}/analytics`, label: "分析" }] : []),
+    { href: `${BASE}/staff`, label: "シフト管理" },
+    { href: `${BASE}/knead`, label: "案をこねる" },
+    { href: `${BASE}/settings`, label: "設定" },
   ];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   function isActive(href: string) {
-    if (href === "/") return pathname === "/";
-    if (href === "/products") return pathname.startsWith("/products") || pathname.startsWith("/inventory") || pathname.startsWith("/ingredients");
+    if (href === BASE) return pathname === BASE || pathname === `${BASE}/`;
+    if (href === `${BASE}/products`) return pathname.startsWith(`${BASE}/products`) || pathname.startsWith(`${BASE}/inventory`) || pathname.startsWith(`${BASE}/ingredients`);
     return pathname.startsWith(href);
   }
 
@@ -58,6 +59,10 @@ export default function NavBar({ storeName, customerMode, showAnalytics = true }
       {/* タブレット以上：左サイドメニュー */}
       <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-bark-100 bg-white px-3 py-5 md:flex">
         <div className="px-3">
+          <Link href="/" className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 mb-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+            RaidQ Portal
+          </Link>
           <span className="text-lg font-bold text-bark-900">Bakery Hub</span>
           {storeName && (
             <p className="mt-0.5 text-xs text-gray-400">{storeName}</p>

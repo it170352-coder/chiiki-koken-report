@@ -109,7 +109,7 @@ export const STATUS_LABELS: Record<ReservationStatus, string> = {
 export const STATUS_LABELS_CORPORATE: Record<ReservationStatus, string> = {
   pending: "注文受付",
   ready: "準備完了",
-  completed: "納品済",
+  completed: "受け渡し済",
   cancelled: "キャンセル",
 };
 
