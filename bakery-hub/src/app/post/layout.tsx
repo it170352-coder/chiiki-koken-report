@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NAV = [
-  { href: "/post", label: "ダッシュボード", icon: "⊞" },
-  { href: "/post/clients", label: "クライアント", icon: "👥" },
-  { href: "/post/posts", label: "投稿管理", icon: "📝" },
-  { href: "/post/research", label: "情報収集", icon: "🔍" },
-  { href: "/post/competitors", label: "競合分析", icon: "📊" },
-  { href: "/post/knowledge", label: "ナレッジ", icon: "💡" },
-  { href: "/post/report", label: "月次レポート", icon: "📈" },
+  { href: "/post", label: "ダッシュボード" },
+  { href: "/post/clients", label: "クライアント" },
+  { href: "/post/posts", label: "投稿管理" },
+  { href: "/post/research", label: "情報収集" },
+  { href: "/post/competitors", label: "競合分析" },
+  { href: "/post/knowledge", label: "ナレッジ" },
+  { href: "/post/report", label: "月次レポート" },
 ];
 
 export default function PostHubLayout({ children }: { children: React.ReactNode }) {
@@ -42,13 +42,12 @@ export default function PostHubLayout({ children }: { children: React.ReactNode 
             <Link
               key={l.href}
               href={l.href}
-              className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+              className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition ${
                 isActive(l.href)
                   ? "bg-gray-100 text-gray-900"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              <span className="text-base">{l.icon}</span>
               {l.label}
             </Link>
           ))}
@@ -72,10 +71,10 @@ export default function PostHubLayout({ children }: { children: React.ReactNode 
           <nav className="flex flex-col gap-0.5 border-t border-gray-200 px-4 py-2">
             {NAV.map((l) => (
               <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
+                className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium ${
                   isActive(l.href) ? "bg-gray-100 text-gray-900" : "text-gray-600"
                 }`}>
-                <span>{l.icon}</span>{l.label}
+                {l.label}
               </Link>
             ))}
           </nav>
