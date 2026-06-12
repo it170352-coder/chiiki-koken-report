@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakery Hub 営業資料</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', '游ゴシック', 'Yu Gothic', sans-serif;
+    background: #e8ddd0;
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  /* A4: 794 × 1123px */
+  .page {
+    width: 794px;
+    height: 1123px;
+    background: #fdf6ee;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* 背景の格子模様 */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(139,90,43,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139,90,43,0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page > * { position: relative; z-index: 1; }
+
+  /* ===== ゾーン① キャッチ ===== */
+  .zone1 {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 24px 52px 20px;
+    border-bottom: 2px dashed #c9a882;
+  }
+
+  /* リボン風ラベル */
+  .ribbon {
+    display: inline-block;
+    background: #8b5a2b;
+    color: #fdf6ee;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    padding: 5px 20px;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .ribbon::before, .ribbon::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 10px;
+    background: #fdf6ee;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .ribbon::before { left: -8px; }
+  .ribbon::after { right: -8px; transform: scaleX(-1); }
+
+  /* ヒーローエリア */
+  .hero-area {
+    background: white;
+    border: 2px solid #c9a882;
+    border-radius: 16px;
+    padding: 20px 32px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #5c3510;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+  .hero-title em { color: #8b5a2b; font-style: normal; }
+  .hero-sub {
+    font-size: 12px;
+    color: #a07850;
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* 信頼バッジ（右上） */
+  .trust-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: #8b5a2b;
+    color: white;
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* KPI 3点 */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .kpi-card {
+    background: white;
+    border: 1.5px solid #c9a882;
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .kpi-num { font-size: 26px; font-weight: 900; color: #5c3510; line-height: 1; letter-spacing: -1px; }
+  .kpi-unit { font-size: 12px; font-weight: 700; color: #5c3510; }
+  .kpi-label { font-size: 10px; color: #a07850; margin-top: 3px; }
+
+  /* ===== ゾーン② SOLUTION + FUNCTION ===== */
+  .zone2 {
+    flex: 1;
+    padding: 16px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    color: #8b5a2b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before, .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #c9a882;
+  }
+
+  /* 3ステップ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .step {
+    background: white;
+    border: 1.5px solid #e0ccb4;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .step-badge {
+    display: inline-block;
+    background: #8b5a2b;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .step-title { font-size: 14px; font-weight: 800; color: #5c3510; line-height: 1.35; margin-bottom: 5px; }
+  .step-desc { font-size: 11.5px; color: #9a7355; line-height: 1.6; }
+  .step-result { margin-top: 7px; font-size: 12px; font-weight: 700; color: #8b5a2b; }
+
+  /* 機能グリッド */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .feature-card {
+    background: white;
+    border: 1.5px solid #e0ccb4;
+    border-radius: 8px;
+    padding: 9px 11px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .f-icon { font-size: 18px; flex-shrink: 0; }
+  .f-title { font-size: 12.5px; font-weight: 800; color: #5c3510; margin-bottom: 1px; }
+  .f-desc { font-size: 10.5px; color: #a07850; line-height: 1.4; }
+
+  /* ===== ゾーン③ CTA ===== */
+  .zone3 {
+    flex-shrink: 0;
+    border-top: 2px dashed #c9a882;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+  }
+
+  .price-block {
+    background: #8b5a2b;
+    padding: 18px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .p-label { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; margin-bottom: 3px; }
+  .p-num { font-size: 44px; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -2px; }
+  .p-unit { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+  .p-note { font-size: 10.5px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  .cta-block {
+    background: #fdf6ee;
+    padding: 18px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cta-title { font-size: 18px; font-weight: 900; color: #5c3510; line-height: 1.35; margin-bottom: 6px; }
+  .cta-title em { color: #8b5a2b; font-style: normal; }
+  .cta-desc { font-size: 12px; color: #a07850; line-height: 1.6; margin-bottom: 12px; }
+  .cta-btn {
+    display: inline-block;
+    background: #8b5a2b;
+    color: white;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 10px 20px;
+    border-radius: 50px;
+    align-self: flex-start;
+    letter-spacing: 0.04em;
+  }
+  .cta-sub { font-size: 10.5px; color: #c9a882; margin-top: 7px; }
+
+  /* フッター */
+  .footer {
+    padding: 7px 48px;
+    border-top: 1px solid #e0ccb4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9.5px;
+    color: #c9a882;
+    flex-shrink: 0;
+    background: #fdf6ee;
+    white-space: nowrap;
+  }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: white; padding: 0; margin: 0; }
+    .page { box-shadow: none; width: 210mm; height: 297mm; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ゾーン① -->
+  <div class="zone1">
+    <div class="ribbon">BAKERY HUB — パン屋専用 業務管理 SaaS</div>
+    <div class="hero-area">
+      <div class="trust-badge">🔍 高槻市内5店舗 現地調査済み</div>
+      <div class="hero-title">
+        予約忘れ・廃棄ロス・時間ムダを<br>
+        <em>まとめて解決する</em>
+      </div>
+      <div class="hero-sub">個人経営パン屋のための、はじめてでも使えるクラウド管理ツール</div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div><span class="kpi-num">15</span><span class="kpi-unit">分</span></div>
+        <div class="kpi-label">毎朝の予約確認を削減</div>
+      </div>
+      <div class="kpi-card">
+        <div><span class="kpi-num">月数回</span></div>
+        <div class="kpi-label">予約忘れ・焼きすぎをゼロへ</div>
+      </div>
+      <div class="kpi-card">
+        <div><span class="kpi-num">5,000</span><span class="kpi-unit">円〜</span></div>
+        <div class="kpi-label">月間廃棄ロスを削減</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ゾーン② -->
+  <div class="zone2">
+    <div>
+      <div class="section-title">SOLUTION — 課題 → 解決策 → 効果</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-badge">STEP 1　課題</div>
+          <div class="step-title">予約・在庫・顧客が<br>バラバラ</div>
+          <div class="step-desc">電話・LINE・口頭で受けた予約が分散。カンに頼った製造数で廃棄が増え続ける。</div>
+        </div>
+        <div class="step">
+          <div class="step-badge">STEP 2　解決策</div>
+          <div class="step-title">1つのクラウドに<br>すべて集約</div>
+          <div class="step-desc">予約・顧客・在庫・売上を一画面で管理。スマホだけで完結、PC不要。</div>
+        </div>
+        <div class="step">
+          <div class="step-badge">STEP 3　効果</div>
+          <div class="step-title">データで経営判断、<br>利益と時間を守る</div>
+          <div class="step-desc">廃棄率・利益率・人気商品を自動集計。感覚依存から数値経営へ。</div>
+          <div class="step-result">→ 導入コスト、初月回収へ</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">FUNCTION</div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="f-icon">📅</span>
+          <div><div class="f-title">予約管理</div><div class="f-desc">取り置き・受取日時・ステータス</div></div>
+        </div>
+        <div class="feature-card">
+          <span class="f-icon">👥</span>
+          <div><div class="f-title">顧客カルテ</div><div class="f-desc">来店・購入履歴をスタッフ共有</div></div>
+        </div>
+        <div class="feature-card">
+          <span class="f-icon">📦</span>
+          <div><div class="f-title">在庫管理</div><div class="f-desc">製造数・残数・原材料コスト</div></div>
+        </div>
+        <div class="feature-card">
+          <span class="f-icon">📊</span>
+          <div><div class="f-title">売上分析</div><div class="f-desc">人気商品・曜日別・廃棄率</div></div>
+        </div>
+        <div class="feature-card">
+          <span class="f-icon">💰</span>
+          <div><div class="f-title">利益率表示</div><div class="f-desc">商品ごとの原価・利益</div></div>
+        </div>
+        <div class="feature-card">
+          <span class="f-icon">📱</span>
+          <div><div class="f-title">スマホ完結</div><div class="f-desc">PC不要。初日から使える</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ゾーン③ -->
+  <div class="zone3">
+    <div class="price-block">
+      <div class="p-label">MONTHLY PLAN</div>
+      <div class="p-num">¥3,000</div>
+      <div class="p-unit">/ 月</div>
+      <div class="p-note">廃棄削減だけで<br>元が取れる価格設計</div>
+    </div>
+    <div class="cta-block">
+      <div class="cta-title"><em>3ヶ月無料</em>で<br>まず試してみてください</div>
+      <div class="cta-desc">費用ゼロで全機能が使えます。使いながら効果を確認してから決めてください。</div>
+      <div class="cta-btn">🍞 無料トライアルを始める</div>
+      <div class="cta-sub">今月限定 ／ raidq-portal-hub.vercel.app</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>高槻市内5店舗の現地調査にもとづく課題設定（2026年）</span>
+    <span>raidq-portal-hub.vercel.app</span>
+  </div>
+
+</div>
+</body>
+</html>

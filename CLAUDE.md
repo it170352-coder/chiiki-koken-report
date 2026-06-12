@@ -18,6 +18,22 @@
 - 高槻_ロードマップ.md
 - 高槻_地域貢献プロジェクト_ロードマップ.pptx
 - 会議資料（高槻MTG No1.pdf 等）
+- Takatsuki BASE 営業資料（03_資料スライド/）
+  - ベクター版: `Takatsuki_BASE_営業資料_10ページ.pptx` + `.pdf`（python-pptx 生成・シャープ・推奨）
+  - 画像版: `Takatsuki_BASE_営業資料_画像版.pptx` + `.pdf`（3倍LANCZOS+UnsharpMask で解像度改善済み）
+  - 営業1枚資料: `Takatsuki_BASE_営業1枚資料.html` + `.pdf` + `.pptx`
+
+## Takatsuki BASE 現状（2026-06-11時点）
+
+- ステータス: 営業資料 2系統 完成。石田さんの確認・先方提出待ち
+- 未解決: 元画像（`資料の画像.png`）スライド9に誤字「観光害」→「観光客」。元データ修正が必要
+- 次回: 「Canva 等から高解像度書き出し可能か？」の回答を受けて画像版を差し替えるかどうか判断
+
+## macOS 変換ツール制約メモ
+
+この環境で使えないツール: LibreOffice(soffice) / pdftoppm / ImageMagick / Real-ESRGAN / torch / cv2 / numpy / PyMuPDF(fitz)
+PPTX→PDF変換: Keynote の AppleScript(osascript) で行う。PDF→PNG は sips で可能。
+詳細パターン: Obsidian 01_Knowledge/Keynote_PPTX_to_PDF_AppleScript.md を参照
 
 ## 触ってほしくないファイル
 
@@ -109,33 +125,65 @@
 
 ---
 
-## Bakery Hub SaaS（01_SaaS企画/、bakery-hub/）
+## RaidQ Portal SaaS（01_SaaS企画/、bakery-hub/）
 
-### 現状（2026-06-07 時点）
+### 現状（2026-06-09 時点）
 
-- ステータス: 本番デプロイ済み・原価計算本実装・CSV出力・シフトスマホ対応まで完了
-- 本番URL: https://bakery-hub-ten.vercel.app（稼働中）
+- ステータス: RaidQ Portal として本番稼働中（Bakery Hub + Post Hub の兄弟構造）
+- 本番URL: https://raidq-portal-hub.vercel.app（旧 bakery-hub-ten.vercel.app は307リダイレクトで存続）
 - アプリ本体: bakery-hub/（Next.js 16 + React 19 + TypeScript + Tailwind v4 + Supabase）
-- Supabase URL: https://qmmnrxbekvmopdpxdrji.supabase.co
+- Supabase URL: https://qmmnrxbekvmopdpxdrji.supabase.co（プロジェクト名: RaidQ Portal）
 - 認証: Confirm email を現在無効化中。本番移行時はカスタムSMTP設定後に再有効化すること
 - 環境変数: SUPABASE_SERVICE_ROLE_KEY を Vercel に登録済み（NEXT_PUBLIC_ なし）
+- UIテーマ: 全画面ライト（白）系統一・ダーク系は今後使用禁止（2026-06-09 恒久ルール化）
 
-### 直近セッション（2026-06-07）で実装したもの
+### プロジェクト構造
 
-- 原価計算本実装（/analytics/profit-preview）: Supabase実データ取得・レシピベース原価計算・利益率アラート・日付範囲フィルタ
-- CSV出力: 日別売上CSV（analytics）・勤務時間CSV（staff）・汎用CsvDownloadButton（BOM付き）
-- シフトスマホ対応（ShiftCalendar.tsx）: md未満はカードリストビュー、md以上は従来テーブル
+```
+RaidQ Portal (/)
+├── Bakery Hub（/bakery）— ベーカリー向け管理SaaS
+└── Post Hub（/post）— SNS運用業務支援SaaS
+```
 
-### NavBar 現在の構成
+Bakery Hub と Post Hub は兄弟関係。Post Hub は Bakery Hub の親ではない。
+
+### 直近セッション（2026-06-09）で実施したこと
+
+- Vercel プロジェクト名・本番URL変更（bakery-hub → raidq-portal）
+- 認証画面（login/signup）のRaidQ Portalブランディングへ刷新
+- 残骸ディレクトリ削除（src/app/(app)/ 53ファイル・src/app/apps/ 57ファイル）
+- Portal層＋Post Hub全19ファイルのダーク→ライトテーマ変換
+- 資料・ドキュメント類の本番URL表記更新
+
+### Bakery Hub NavBar 現在の構成
 
 ダッシュボード / 予約 / 顧客 / 商品 / 在庫 / 原材料 / 来客数 / 分析 / 設定
 
+### Post Hub カレンダー表示（2026-06-11 動作確認済み）
+
+- 投稿管理（/post/posts）にカンバン／月／週の3ビュー実装済み
+- 月表示: カレンダーグリッド・曜日ヘッダー・今日ハイライト・投稿ステータス色表示・モバイルはドット表示
+- 週表示: 7日間・今日ハイライト・投稿カード表示
+- ビュー切替・前後ナビ・今日ボタン・クライアント絞り込み すべて dev サーバーで動作確認済み（コンソールエラーなし）
+- 必須機能①は完了。実装ファイル: bakery-hub/src/app/post/posts/PostsClient.tsx
+
+### Post Hub 投稿ショートカット（2026-06-12）
+
+- 全画面下部中央に「＋」FAB（src/app/post/layout.tsx）→ /post/posts/new へ遷移。作成画面では非表示
+
+### Portal ユーザー管理・権限（2026-06-12 新設）
+
+- /users でユーザー編集（名前・メール・パスワード再設定・削除）。実装: src/app/(portal)/users/
+- portal レベルの権限を新設: user_metadata.role = "admin" | "user"（Bakery Hub の store_members 権限とは別物）
+- 削除・権限変更は管理者(admin)のみ。編集は全員可・自己昇格不可
+- 設定（(portal)/settings/）のユーザー追加に権限 select 追加
+- 管理者アカウント: t_ishida@andskill.com（設定済み）
+
 ### 次回やるべきこと
 
-1. カスタムSMTP設定 + Confirm email 再有効化
-2. 営業スライド（Bakery_Hub_営業提案資料.pptx）のファクトチェック
-3. 前日コピーボタン（在庫・シフト等）の確認・追加箇所があれば対応
-4. スタッフ管理機能の実画面確認（石田さん本人がオーナーでログインして確認）
+1. リサーチ資料（Buffer/Hootsuite/Later/Metricool/SocialDog 調査）作成
+2. 企画書・営業提案資料（Post Hub版）作成
+3. カスタムSMTP設定 + Confirm email 再有効化
 
 ### 触ってほしくないファイル（追加）
 

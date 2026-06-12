@@ -1,11 +1,11 @@
 {
-  "name": "Bakery Hub",
-  "short_name": "BakeryHub",
-  "description": "パン屋さんのための業務管理アプリ",
+  "name": "RaidQ Portal",
+  "short_name": "RaidQ",
+  "description": "株式会社レイドキューが提供する業務改善SaaSプラットフォーム",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fffbeb",
-  "theme_color": "#d97706",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
   "icons": [
     {
       "src": "/icons/icon-192.png",

@@ -83,6 +83,20 @@ export default function PostHubLayout({ children }: { children: React.ReactNode 
       </header>
 
       <main className="flex-1 px-4 py-6 md:px-8">{children}</main>
+
+      {/* 投稿作成へのショートカット（下部中央の＋ボタン） */}
+      {pathname !== "/post/posts/new" && (
+        <Link
+          href="/post/posts/new"
+          aria-label="投稿を作成"
+          className="fixed bottom-6 left-1/2 z-30 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-700 active:scale-95"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </Link>
+      )}
     </div>
   );
 }
